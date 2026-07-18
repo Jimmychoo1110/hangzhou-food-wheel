@@ -1,6 +1,7 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
+import type { RefObject } from "react";
 import "./wheel.css";
 
 type Restaurant = {
@@ -107,36 +108,53 @@ const foodMap: Record<string, Restaurant[]> = {
   ],
 };
 
+const categoryDishes: Record<string, string[]> = {
+  "烧烤类": ["烤羊肉串", "烤五花肉", "烤鸡翅", "烤牛肉", "烤茄子", "烤生蚝", "锡纸金针菇", "烤鸡架", "烤韭菜", "炒方便面"],
+  "中式正餐类": ["招牌烤鸭", "东坡肉", "龙井虾仁", "糖醋排骨", "葱油鲈鱼", "时令炒蔬", "油爆虾", "酱鸭", "家常豆腐", "酒酿圆子"],
+  "面食类": ["片儿川", "虾爆鳝面", "猪肝拌川", "腰花拌川", "雪菜肉丝面", "大排面", "鳝丝面", "卤蛋", "炸酱面", "小笼包"],
+  "炒菜类": ["招牌小炒肉", "辣椒炒肉", "干锅花菜", "酸辣土豆丝", "爆炒肥肠", "农家一碗香", "干煸四季豆", "番茄炒蛋", "炒时蔬", "下饭毛血旺"],
+  "洋人饭类": ["招牌牛排", "烤牛胸肉", "海鲜意面", "披萨", "炸鸡", "汉堡", "寿司拼盘", "烤鳗鱼", "部队锅", "提拉米苏"],
+  "外卖类": ["酱蟹拌饭", "炸鸡套餐", "黄焖鸡米饭", "牛肉饭", "麻辣烫", "酸菜鱼", "螺蛳粉", "小炒肉盖饭", "轻食沙拉", "奶茶"],
+  "汉堡炸鸡类": ["招牌牛肉堡", "辣鸡腿堡", "炸鸡块", "鸡翅", "薯条", "洋葱圈", "鸡柳", "芝士汉堡", "炸虾堡", "奶昔"],
+  "自助类": ["现切烤牛肉", "烤羊排", "刺身拼盘", "海鲜档", "现煎牛排", "烤榴莲", "寿司", "小火锅", "甜品台", "冰淇淋"],
+  "辣辣辣": ["辣椒炒肉", "跳水蛙", "水煮鱼", "毛血旺", "口水鸡", "夫妻肺片", "酸菜鱼", "干锅肥肠", "麻婆豆腐", "泡椒牛肉"],
+  "火锅类": ["现切黄牛肉", "鲜毛肚", "手打虾滑", "嫩牛肉", "鸭肠", "黄喉", "炸腐皮", "贡菜", "宽粉", "红糖糍粑"],
+  "杭帮菜": ["西湖醋鱼", "龙井虾仁", "东坡肉", "叫花鸡", "油爆虾", "宋嫂鱼羹", "笋干老鸭煲", "酱鸭", "干炸响铃", "桂花糖藕"],
+  "随便吃点": ["跷脚牛肉", "肉蟹煲", "烤鸡", "酸菜鱼", "小炒肉", "红烧肉", "牛肉粉", "蛋黄鸡翅", "糖醋排骨", "时令炒蔬"],
+};
+
+const restaurantDishes: Record<string, string[]> = {
+  "李白图书馆餐厅": ["招牌北京烤鸭", "秘制醉虾", "李白大闸蟹", "自贡鲜辣跳跳蛙", "椒香鸡汁大白条", "鸭架椒盐双吃", "坚果沙拉", "东坡肉", "酒酿圆子", "时令江鲜"],
+  "绿茶餐厅": ["绿茶烤鸡", "龙井虾仁", "面包诱惑", "石锅蛙", "沸腾鱼", "鱼头诱惑", "东坡肉", "笋干老鸭煲", "干锅花菜", "桂花糖藕"],
+  "入江南": ["改良西湖醋鱼", "龙井虾仁", "东坡肉", "干炸响铃", "宋嫂鱼羹", "油爆虾", "笋干老鸭煲", "酱鸭", "时令江鲜", "江南甜品"],
+  "湘香蒸菜馆": ["酱香猪蹄", "本味白切鸡", "现蒸鱼", "剁椒鱼头", "粉蒸肉", "梅菜扣肉", "蒸排骨", "小炒黄牛肉", "蒸蛋", "时令蒸菜"],
+  "新白鹿": ["蛋黄鸡翅", "糖醋排骨", "蛋黄南瓜", "铁板鲈鱼", "话梅花生", "菠萝牛柳", "海鲜豆腐煲", "干锅花菜", "酱鸭", "酒酿圆子"],
+  "汉巴味德": ["现切巴西烤肉", "蜜汁烤菠萝", "烤羊腿", "烤牛舌", "烤鸡翅", "披萨", "海鲜档", "寿司", "水果甜品", "冰淇淋"],
+};
+
 const categories = Object.keys(foodMap);
-const colors = [
-  "#ff6b35", "#ffd166", "#2ec4b6", "#ff4d6d", "#8338ec", "#3a86ff",
-  "#fb8500", "#8ac926", "#e63946", "#6a4c93", "#f4a261", "#00b4d8",
-];
+const colors = ["#ff6b35", "#ffd166", "#2ec4b6", "#ff4d6d", "#8338ec", "#3a86ff", "#fb8500", "#8ac926", "#e63946", "#6a4c93", "#f4a261", "#00b4d8"];
 
 function Wheel({
   items,
-  rotation,
+  wheelRef,
+  pointerRef,
   spinning,
 }: {
   items: string[];
-  rotation: number;
+  wheelRef: RefObject<HTMLDivElement | null>;
+  pointerRef: RefObject<HTMLDivElement | null>;
   spinning: boolean;
 }) {
   const background = useMemo(() => {
     const step = 360 / items.length;
-    return `conic-gradient(${items
-      .map((_, i) => `${colors[i % colors.length]} ${i * step}deg ${(i + 1) * step}deg`)
-      .join(",")})`;
+    return `conic-gradient(${items.map((_, i) => `${colors[i % colors.length]} ${i * step}deg ${(i + 1) * step}deg`).join(",")})`;
   }, [items]);
 
   return (
     <div className="wheel-shell">
-      <div className="pointer" aria-hidden="true" />
-      <div
-        className={`wheel ${spinning ? "is-spinning" : ""}`}
-        style={{ background, transform: `rotate(${rotation}deg)` }}
-        aria-label={`转盘，共 ${items.length} 个选项`}
-      >
+      <div className="pointer" ref={pointerRef} aria-hidden="true" />
+      <div ref={wheelRef} className={`wheel ${spinning ? "is-spinning" : ""}`} style={{ background }} aria-label={`转盘，共 ${items.length} 个选项`}>
         {items.map((item, i) => {
           const angle = (i + 0.5) * (360 / items.length) - 90;
           const rad = (angle * Math.PI) / 180;
@@ -144,10 +162,7 @@ function Wheel({
           return (
             <span
               className={`wheel-label ${items.length > 10 ? "dense" : ""}`}
-              style={{
-                left: `${50 + Math.cos(rad) * radius}%`,
-                top: `${50 + Math.sin(rad) * radius}%`,
-              }}
+              style={{ left: `${50 + Math.cos(rad) * radius}%`, top: `${50 + Math.sin(rad) * radius}%` }}
               key={item}
             >
               {item}
@@ -166,17 +181,40 @@ export default function Home() {
   const [selectedRestaurant, setSelectedRestaurant] = useState<Restaurant | null>(null);
   const [categoryHistory, setCategoryHistory] = useState<string[]>([]);
   const [restaurantHistory, setRestaurantHistory] = useState<string[]>([]);
-  const [rotation, setRotation] = useState(0);
   const [spinning, setSpinning] = useState(false);
+  const wheelRef = useRef<HTMLDivElement>(null);
+  const pointerRef = useRef<HTMLDivElement>(null);
+  const rotationRef = useRef(0);
+  const animationRef = useRef<number | null>(null);
 
-  const restaurantItems = selectedCategory
-    ? foodMap[selectedCategory].map((item) => item.name)
-    : [];
+  const restaurantItems = selectedCategory ? foodMap[selectedCategory].map((item) => item.name) : [];
   const history = stage === "category" ? categoryHistory : restaurantHistory;
   const currentResult = stage === "category" ? selectedCategory : selectedRestaurant?.name ?? "";
+  const dishes = selectedRestaurant ? restaurantDishes[selectedRestaurant.name] ?? categoryDishes[selectedCategory] : [];
+
+  function tickPointer(angle: number, sector: number, previousTick: { value: number }) {
+    const tick = Math.floor(angle / sector);
+    if (tick === previousTick.value || !pointerRef.current) return;
+    previousTick.value = tick;
+    pointerRef.current.classList.remove("is-ticking");
+    void pointerRef.current.offsetWidth;
+    pointerRef.current.classList.add("is-ticking");
+  }
+
+  function finishSpin(picked: string | Restaurant, pickedName: string, target: number) {
+    rotationRef.current = target;
+    if (stage === "category") {
+      setSelectedCategory(pickedName);
+      setCategoryHistory((prev) => [...prev, pickedName]);
+    } else {
+      setSelectedRestaurant(picked as Restaurant);
+      setRestaurantHistory((prev) => [...prev, pickedName]);
+    }
+    setSpinning(false);
+  }
 
   function spin() {
-    if (spinning || history.length >= 3 || stage === "done") return;
+    if (spinning || history.length >= 3 || stage === "done" || !wheelRef.current) return;
     const pool =
       stage === "category"
         ? categories.filter((item) => !categoryHistory.includes(item))
@@ -186,49 +224,100 @@ export default function Home() {
     const allItems = stage === "category" ? categories : restaurantItems;
     const pickedIndex = allItems.indexOf(pickedName);
     const sector = 360 / allItems.length;
-    const extraTurns = 5 + Math.floor(Math.random() * 3);
-    const target = rotation + extraTurns * 360 + (360 - pickedIndex * sector - sector / 2);
+    const start = rotationRef.current;
+    const currentMod = ((start % 360) + 360) % 360;
+    const alignedMod = (360 - (pickedIndex + 0.5) * sector + 360) % 360;
+    const alignment = (alignedMod - currentMod + 360) % 360;
+    const exactTarget = start + (5 + Math.floor(Math.random() * 2)) * 360 + alignment;
+    const magneticStart = exactTarget - Math.min(7, sector * 0.2);
+    const accelerationTime = 480;
+    const maxVelocity = 1.35;
+    const accelerationDistance = 0.5 * maxVelocity * accelerationTime;
+    const decelerationDistance = Math.max(900, magneticStart - start - accelerationDistance);
+    const decelerationTime = (2 * decelerationDistance) / maxVelocity;
+    const deceleration = -maxVelocity / decelerationTime;
+    const begin = performance.now();
+    const previousTick = { value: -1 };
 
     setSpinning(true);
-    setRotation(target);
-    window.setTimeout(() => {
-      if (stage === "category") {
-        setSelectedCategory(pickedName);
-        setCategoryHistory((prev) => [...prev, pickedName]);
+    wheelRef.current.style.transition = "none";
+    if (animationRef.current) cancelAnimationFrame(animationRef.current);
+
+    const animate = (now: number) => {
+      const elapsed = now - begin;
+      let angle: number;
+      if (elapsed <= accelerationTime) {
+        const acceleration = maxVelocity / accelerationTime;
+        angle = start + 0.5 * acceleration * elapsed * elapsed;
       } else {
-        setSelectedRestaurant(picked as Restaurant);
-        setRestaurantHistory((prev) => [...prev, pickedName]);
+        const coastTime = elapsed - accelerationTime;
+        if (coastTime >= decelerationTime) {
+          const wheel = wheelRef.current;
+          if (!wheel) return;
+          wheel.style.transform = `rotate(${magneticStart}deg)`;
+          wheel.classList.add("is-snapping");
+          requestAnimationFrame(() => {
+            wheel.style.transform = `rotate(${exactTarget}deg)`;
+          });
+          window.setTimeout(() => {
+            wheel.classList.remove("is-snapping");
+            wheel.style.transition = "none";
+            finishSpin(picked, pickedName, exactTarget);
+          }, 360);
+          return;
+        }
+        angle = start + accelerationDistance + maxVelocity * coastTime + 0.5 * deceleration * coastTime * coastTime;
       }
-      setSpinning(false);
-    }, 1750);
+      if (wheelRef.current) wheelRef.current.style.transform = `rotate(${angle}deg)`;
+      tickPointer(angle, sector, previousTick);
+      animationRef.current = requestAnimationFrame(animate);
+    };
+
+    animationRef.current = requestAnimationFrame(animate);
   }
 
   function confirm() {
     if (!currentResult || spinning) return;
     if (stage === "category") {
-      setStage("restaurant");
-      setRotation(0);
+      rotationRef.current = 0;
       setRestaurantHistory([]);
       setSelectedRestaurant(null);
+      setStage("restaurant");
     } else {
       setStage("done");
     }
   }
 
   function reset() {
+    if (animationRef.current) cancelAnimationFrame(animationRef.current);
+    rotationRef.current = 0;
     setStage("category");
     setSelectedCategory("");
     setSelectedRestaurant(null);
     setCategoryHistory([]);
     setRestaurantHistory([]);
-    setRotation(0);
     setSpinning(false);
   }
 
+  function openDelivery() {
+    if (!selectedRestaurant) return;
+    const keyword = encodeURIComponent(`${selectedRestaurant.name} 杭州`);
+    const fallback = `https://s.m.taobao.com/h5?q=${encodeURIComponent(`淘宝闪购 ${selectedRestaurant.name} 杭州`)}`;
+    const timer = window.setTimeout(() => {
+      if (document.visibilityState === "visible") window.location.href = fallback;
+    }, 1400);
+    document.addEventListener(
+      "visibilitychange",
+      () => {
+        if (document.visibilityState === "hidden") window.clearTimeout(timer);
+      },
+      { once: true }
+    );
+    window.location.href = `eleme://search?keyword=${keyword}`;
+  }
+
   const amapUrl = selectedRestaurant
-    ? `https://uri.amap.com/search?keyword=${encodeURIComponent(
-        `${selectedRestaurant.name} 杭州`
-      )}&city=杭州&callnative=1`
+    ? `https://uri.amap.com/search?keyword=${encodeURIComponent(`${selectedRestaurant.name} 杭州`)}&city=杭州&callnative=1`
     : "#";
 
   return (
@@ -247,16 +336,27 @@ export default function Home() {
       {stage !== "done" ? (
         <section className="game-card">
           <div className="intro">
-            <p className="eyebrow">{stage === "category" ? "ROUND 01 · 定个方向" : `ROUND 02 · ${selectedCategory}`}</p>
-            <h1>{stage === "category" ? "转到什么，今晚就吃什么。" : "范围缩小，选出今晚这家。"}</h1>
-            <p className="subtitle">每轮最多 3 次，抽过的选项不会再出现。转到满意就确认，别让选择困难饿坏你。</p>
+            <p className="eyebrow">{stage === "category" ? "ROUND 01 · 定个方向" : "ROUND 02 · 选出今晚这家"}</p>
+            <h1>{stage === "category" ? "转到什么，今晚就吃什么。" : "范围缩小，交给手气。"}</h1>
+            <p className="subtitle">每轮最多 3 次，抽过的选项不会再出现。转盘先加速、再受摩擦减速，最后会自动吸附到选项正中心。</p>
           </div>
+
+          {stage === "restaurant" && (
+            <div className="sticker-row" aria-live="polite">
+              <div className="category-sticker" key={selectedCategory}>
+                <span>啪！大类已锁定</span>
+                <strong>{selectedCategory}</strong>
+              </div>
+            </div>
+          )}
 
           <div className="game-grid">
             <div className="wheel-area">
               <Wheel
+                key={`${stage}-${selectedCategory}`}
                 items={stage === "category" ? categories : restaurantItems}
-                rotation={rotation}
+                wheelRef={wheelRef}
+                pointerRef={pointerRef}
                 spinning={spinning}
               />
             </div>
@@ -269,7 +369,7 @@ export default function Home() {
               </div>
 
               <button className="spin-button" onClick={spin} disabled={spinning || history.length >= 3}>
-                {spinning ? "命运正在转…" : history.length >= 3 ? "三次机会已用完" : currentResult ? "不满意，再转一次" : "开始转动"}
+                {spinning ? "转盘正在减速…" : history.length >= 3 ? "三次机会已用完" : currentResult ? "不满意，再转一次" : "用力转一下"}
               </button>
 
               <div className={`result-ticket ${currentResult ? "show" : ""}`} aria-live="polite">
@@ -301,6 +401,27 @@ export default function Home() {
               )}
             </aside>
           </div>
+
+          {stage === "restaurant" && selectedRestaurant && (
+            <section className="dish-board">
+              <div className="dish-heading">
+                <div>
+                  <p className="eyebrow">WHAT TO ORDER · 到店点什么</p>
+                  <h2>{selectedRestaurant.name}｜人气菜参考</h2>
+                </div>
+                <span>TOP 10</span>
+              </div>
+              <ol>
+                {dishes.map((dish, index) => (
+                  <li key={dish}>
+                    <b>{String(index + 1).padStart(2, "0")}</b>
+                    <span>{dish}</span>
+                  </li>
+                ))}
+              </ol>
+              <p>菜品根据公开榜单、门店资料及同菜系热度整理，并非大众点评或高德的实时排名；到店前建议再次查看最新菜单。</p>
+            </section>
+          )}
         </section>
       ) : (
         <section className="final-card">
@@ -311,8 +432,10 @@ export default function Home() {
           {selectedRestaurant?.source && <span className="source-pill">高德榜单补充</span>}
           <div className="final-actions">
             <a href={amapUrl} target="_blank" rel="noreferrer">去高德搜这家 ↗</a>
-            <button onClick={reset}>全部重来</button>
+            <button className="delivery-button" onClick={openDelivery}>看看有没有外卖</button>
+            <button className="reset-button" onClick={reset}>全部重来</button>
           </div>
+          <p className="delivery-note">会优先唤起淘宝闪购（原饿了么）；未安装时转到淘宝网页搜索。</p>
           <p className="promise">不许反悔。现在，出发！</p>
         </section>
       )}
