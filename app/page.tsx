@@ -108,30 +108,6 @@ const foodMap: Record<string, Restaurant[]> = {
   ],
 };
 
-const categoryDishes: Record<string, string[]> = {
-  "烧烤类": ["烤羊肉串", "烤五花肉", "烤鸡翅", "烤牛肉", "烤茄子", "烤生蚝", "锡纸金针菇", "烤鸡架", "烤韭菜", "炒方便面"],
-  "中式正餐类": ["招牌烤鸭", "东坡肉", "龙井虾仁", "糖醋排骨", "葱油鲈鱼", "时令炒蔬", "油爆虾", "酱鸭", "家常豆腐", "酒酿圆子"],
-  "面食类": ["片儿川", "虾爆鳝面", "猪肝拌川", "腰花拌川", "雪菜肉丝面", "大排面", "鳝丝面", "卤蛋", "炸酱面", "小笼包"],
-  "炒菜类": ["招牌小炒肉", "辣椒炒肉", "干锅花菜", "酸辣土豆丝", "爆炒肥肠", "农家一碗香", "干煸四季豆", "番茄炒蛋", "炒时蔬", "下饭毛血旺"],
-  "洋人饭类": ["招牌牛排", "烤牛胸肉", "海鲜意面", "披萨", "炸鸡", "汉堡", "寿司拼盘", "烤鳗鱼", "部队锅", "提拉米苏"],
-  "外卖类": ["酱蟹拌饭", "炸鸡套餐", "黄焖鸡米饭", "牛肉饭", "麻辣烫", "酸菜鱼", "螺蛳粉", "小炒肉盖饭", "轻食沙拉", "奶茶"],
-  "汉堡炸鸡类": ["招牌牛肉堡", "辣鸡腿堡", "炸鸡块", "鸡翅", "薯条", "洋葱圈", "鸡柳", "芝士汉堡", "炸虾堡", "奶昔"],
-  "自助类": ["现切烤牛肉", "烤羊排", "刺身拼盘", "海鲜档", "现煎牛排", "烤榴莲", "寿司", "小火锅", "甜品台", "冰淇淋"],
-  "辣辣辣": ["辣椒炒肉", "跳水蛙", "水煮鱼", "毛血旺", "口水鸡", "夫妻肺片", "酸菜鱼", "干锅肥肠", "麻婆豆腐", "泡椒牛肉"],
-  "火锅类": ["现切黄牛肉", "鲜毛肚", "手打虾滑", "嫩牛肉", "鸭肠", "黄喉", "炸腐皮", "贡菜", "宽粉", "红糖糍粑"],
-  "杭帮菜": ["西湖醋鱼", "龙井虾仁", "东坡肉", "叫花鸡", "油爆虾", "宋嫂鱼羹", "笋干老鸭煲", "酱鸭", "干炸响铃", "桂花糖藕"],
-  "随便吃点": ["跷脚牛肉", "肉蟹煲", "烤鸡", "酸菜鱼", "小炒肉", "红烧肉", "牛肉粉", "蛋黄鸡翅", "糖醋排骨", "时令炒蔬"],
-};
-
-const restaurantDishes: Record<string, string[]> = {
-  "李白图书馆餐厅": ["招牌北京烤鸭", "秘制醉虾", "李白大闸蟹", "自贡鲜辣跳跳蛙", "椒香鸡汁大白条", "鸭架椒盐双吃", "坚果沙拉", "东坡肉", "酒酿圆子", "时令江鲜"],
-  "绿茶餐厅": ["绿茶烤鸡", "龙井虾仁", "面包诱惑", "石锅蛙", "沸腾鱼", "鱼头诱惑", "东坡肉", "笋干老鸭煲", "干锅花菜", "桂花糖藕"],
-  "入江南": ["改良西湖醋鱼", "龙井虾仁", "东坡肉", "干炸响铃", "宋嫂鱼羹", "油爆虾", "笋干老鸭煲", "酱鸭", "时令江鲜", "江南甜品"],
-  "湘香蒸菜馆": ["酱香猪蹄", "本味白切鸡", "现蒸鱼", "剁椒鱼头", "粉蒸肉", "梅菜扣肉", "蒸排骨", "小炒黄牛肉", "蒸蛋", "时令蒸菜"],
-  "新白鹿": ["蛋黄鸡翅", "糖醋排骨", "蛋黄南瓜", "铁板鲈鱼", "话梅花生", "菠萝牛柳", "海鲜豆腐煲", "干锅花菜", "酱鸭", "酒酿圆子"],
-  "汉巴味德": ["现切巴西烤肉", "蜜汁烤菠萝", "烤羊腿", "烤牛舌", "烤鸡翅", "披萨", "海鲜档", "寿司", "水果甜品", "冰淇淋"],
-};
-
 const categories = Object.keys(foodMap);
 const colors = ["#ff6b35", "#ffd166", "#2ec4b6", "#ff4d6d", "#8338ec", "#3a86ff", "#fb8500", "#8ac926", "#e63946", "#6a4c93", "#f4a261", "#00b4d8"];
 
@@ -140,11 +116,13 @@ function Wheel({
   wheelRef,
   pointerRef,
   spinning,
+  rotation,
 }: {
   items: string[];
   wheelRef: RefObject<HTMLDivElement | null>;
   pointerRef: RefObject<HTMLDivElement | null>;
   spinning: boolean;
+  rotation: number;
 }) {
   const background = useMemo(() => {
     const step = 360 / items.length;
@@ -154,7 +132,12 @@ function Wheel({
   return (
     <div className="wheel-shell">
       <div className="pointer" ref={pointerRef} aria-hidden="true" />
-      <div ref={wheelRef} className={`wheel ${spinning ? "is-spinning" : ""}`} style={{ background }} aria-label={`转盘，共 ${items.length} 个选项`}>
+      <div
+        ref={wheelRef}
+        className={`wheel ${spinning ? "is-spinning" : ""}`}
+        style={{ background, transform: `rotate(${rotation}deg)` }}
+        aria-label={`转盘，共 ${items.length} 个选项`}
+      >
         {items.map((item, i) => {
           const angle = (i + 0.5) * (360 / items.length) - 90;
           const rad = (angle * Math.PI) / 180;
@@ -182,6 +165,7 @@ export default function Home() {
   const [categoryHistory, setCategoryHistory] = useState<string[]>([]);
   const [restaurantHistory, setRestaurantHistory] = useState<string[]>([]);
   const [spinning, setSpinning] = useState(false);
+  const [settledRotation, setSettledRotation] = useState(0);
   const wheelRef = useRef<HTMLDivElement>(null);
   const pointerRef = useRef<HTMLDivElement>(null);
   const rotationRef = useRef(0);
@@ -190,7 +174,6 @@ export default function Home() {
   const restaurantItems = selectedCategory ? foodMap[selectedCategory].map((item) => item.name) : [];
   const history = stage === "category" ? categoryHistory : restaurantHistory;
   const currentResult = stage === "category" ? selectedCategory : selectedRestaurant?.name ?? "";
-  const dishes = selectedRestaurant ? restaurantDishes[selectedRestaurant.name] ?? categoryDishes[selectedCategory] : [];
 
   function tickPointer(angle: number, sector: number, previousTick: { value: number }) {
     const tick = Math.floor(angle / sector);
@@ -203,6 +186,7 @@ export default function Home() {
 
   function finishSpin(picked: string | Restaurant, pickedName: string, target: number) {
     rotationRef.current = target;
+    setSettledRotation(target);
     if (stage === "category") {
       setSelectedCategory(pickedName);
       setCategoryHistory((prev) => [...prev, pickedName]);
@@ -280,6 +264,7 @@ export default function Home() {
     if (!currentResult || spinning) return;
     if (stage === "category") {
       rotationRef.current = 0;
+      setSettledRotation(0);
       setRestaurantHistory([]);
       setSelectedRestaurant(null);
       setStage("restaurant");
@@ -291,6 +276,7 @@ export default function Home() {
   function reset() {
     if (animationRef.current) cancelAnimationFrame(animationRef.current);
     rotationRef.current = 0;
+    setSettledRotation(0);
     setStage("category");
     setSelectedCategory("");
     setSelectedRestaurant(null);
@@ -337,15 +323,15 @@ export default function Home() {
         <section className="game-card">
           <div className="intro">
             <p className="eyebrow">{stage === "category" ? "ROUND 01 · 定个方向" : "ROUND 02 · 选出今晚这家"}</p>
-            <h1>{stage === "category" ? "转到什么，今晚就吃什么。" : "范围缩小，交给手气。"}</h1>
-            <p className="subtitle">每轮最多 3 次，抽过的选项不会再出现。转盘先加速、再受摩擦减速，最后会自动吸附到选项正中心。</p>
+            <h1>{stage === "category" ? "今晚吃什么！" : "吃哪家！"}</h1>
           </div>
 
           {stage === "restaurant" && (
             <div className="sticker-row" aria-live="polite">
               <div className="category-sticker" key={selectedCategory}>
-                <span>啪！大类已锁定</span>
+                <img src="category-ticket.png" alt="" />
                 <strong>{selectedCategory}</strong>
+                <span className="comic-pop" aria-hidden="true">啪！</span>
               </div>
             </div>
           )}
@@ -353,11 +339,12 @@ export default function Home() {
           <div className="game-grid">
             <div className="wheel-area">
               <Wheel
-                key={`${stage}-${selectedCategory}`}
+                key={stage === "category" ? "category-wheel" : `restaurant-wheel-${selectedCategory}`}
                 items={stage === "category" ? categories : restaurantItems}
                 wheelRef={wheelRef}
                 pointerRef={pointerRef}
                 spinning={spinning}
+                rotation={settledRotation}
               />
             </div>
 
@@ -403,23 +390,18 @@ export default function Home() {
           </div>
 
           {stage === "restaurant" && selectedRestaurant && (
-            <section className="dish-board">
-              <div className="dish-heading">
-                <div>
-                  <p className="eyebrow">WHAT TO ORDER · 到店点什么</p>
-                  <h2>{selectedRestaurant.name}｜人气菜参考</h2>
-                </div>
-                <span>TOP 10</span>
+            <section className="dish-board dish-verifying">
+              <p className="eyebrow">DISH RANKING · 真实榜单核实中</p>
+              <h2>{selectedRestaurant.name}｜暂不展示未经核实的菜品</h2>
+              <p>原有推测内容已全部移除。需要确认具体分店后，才能按大众点评、高德扫街榜或小红书的真实热度整理 Top 10 与网友实拍。</p>
+              <div className="verify-actions">
+                <a href={`https://www.xiaohongshu.com/search_result?keyword=${encodeURIComponent(`${selectedRestaurant.name} 杭州 招牌菜`)}`} target="_blank" rel="noreferrer">
+                  去小红书核实
+                </a>
+                <a href={`https://uri.amap.com/search?keyword=${encodeURIComponent(`${selectedRestaurant.name} 杭州`)}&city=杭州&callnative=1`} target="_blank" rel="noreferrer">
+                  去高德查看
+                </a>
               </div>
-              <ol>
-                {dishes.map((dish, index) => (
-                  <li key={dish}>
-                    <b>{String(index + 1).padStart(2, "0")}</b>
-                    <span>{dish}</span>
-                  </li>
-                ))}
-              </ol>
-              <p>菜品根据公开榜单、门店资料及同菜系热度整理，并非大众点评或高德的实时排名；到店前建议再次查看最新菜单。</p>
             </section>
           )}
         </section>
