@@ -336,28 +336,61 @@ main {
   transform: translate(-50%, -50%) scale(.95);
 }
 
-.wheel-hub span { display: block; }
-.wheel-hub.has-result span {
+.wheel-hub .hub-copy {
+  position: relative;
+  z-index: 1;
+  display: block;
+}
+
+.wheel-hub.has-result .hub-copy {
   max-width: 74px;
   font-size: 11px;
   line-height: 1.15;
 }
 
-.wheel-hub i {
-  display: flex;
-  justify-content: center;
-  gap: 4px;
-  margin-top: 7px;
-}
-
-.wheel-hub i b {
+.wheel-hub.has-result .hub-copy strong,
+.wheel-hub.has-result .hub-copy small {
   display: block;
-  width: 18px;
-  height: 4px;
-  background: var(--red);
 }
 
-.wheel-hub i b.used { background: #d7cfc4; }
+.wheel-hub.has-result .hub-copy strong {
+  font-size: 14px;
+  line-height: 1.05;
+}
+
+.wheel-hub.has-result .hub-copy small {
+  margin-top: 3px;
+  font-size: 10px;
+  font-weight: 900;
+}
+
+.wheel-hub .chance-ring {
+  position: absolute;
+  inset: -17px;
+  z-index: 0;
+  display: block;
+  margin: 0;
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.wheel-hub .chance-ring b {
+  --chance-color: var(--red);
+  position: absolute;
+  inset: 0;
+  width: auto;
+  height: auto;
+  border-radius: 50%;
+  background: conic-gradient(
+    from calc(-58deg + var(--segment-angle)),
+    var(--chance-color) 0 104deg,
+    transparent 104deg 360deg
+  );
+  -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 6px), #000 0);
+  mask: radial-gradient(farthest-side, transparent calc(100% - 6px), #000 0);
+}
+
+.wheel-hub .chance-ring b.used { --chance-color: #c9c2b9; }
 
 .selection-summary {
   width: min(430px, 100%);
@@ -460,8 +493,14 @@ main {
   .wheel-label { width: 57px; font-size: 9px; }
   .wheel-label.dense { width: 48px; font-size: 7.5px; }
   .wheel-hub { width: 94px; border-width: 7px; font-size: 28px; }
-  .wheel-hub.has-result span { max-width: 67px; font-size: 10px; }
-  .wheel-hub i b { width: 15px; height: 3px; }
+  .wheel-hub.has-result .hub-copy { max-width: 67px; }
+  .wheel-hub.has-result .hub-copy strong { font-size: 13px; }
+  .wheel-hub.has-result .hub-copy small { font-size: 9px; }
+  .wheel-hub .chance-ring { inset: -15px; }
+  .wheel-hub .chance-ring b {
+    -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 5px), #000 0);
+    mask: radial-gradient(farthest-side, transparent calc(100% - 5px), #000 0);
+  }
   .selection-summary { min-height: 35px; margin-top: 8px; padding: 6px 9px; }
   .selection-summary strong { font-size: 14px; }
   .confirm-button { margin-top: 7px; padding: 11px 12px; }

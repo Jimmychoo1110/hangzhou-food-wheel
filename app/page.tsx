@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo, useRef, useState } from "react";
-import type { RefObject } from "react";
+import type { CSSProperties, RefObject } from "react";
 import { dishRankings } from "./dish-rankings";
 import "./wheel.css";
 
@@ -169,12 +169,29 @@ function Wheel({
         disabled={spinning || attempts >= 3 || locked}
         aria-label={currentResult ? "不满意，再转一次" : "开始转动"}
       >
-        <span>
-          {spinning ? "转动中" : locked ? "已选定" : attempts >= 3 ? "本轮已用完" : currentResult ? "不满意？再转一次" : "转"}
+        <span className="hub-copy">
+          {spinning ? (
+            "转动中"
+          ) : locked ? (
+            "已选定"
+          ) : attempts >= 3 ? (
+            "本轮已用完"
+          ) : currentResult ? (
+            <>
+              <strong>不满意？</strong>
+              <small>再转一次</small>
+            </>
+          ) : (
+            "转"
+          )}
         </span>
-        <i aria-hidden="true">
+        <i className="chance-ring" aria-hidden="true">
           {[0, 1, 2].map((index) => (
-            <b className={index < attempts ? "used" : ""} key={index} />
+            <b
+              className={index < attempts ? "used" : ""}
+              style={{ "--segment-angle": `${index * 120}deg` } as CSSProperties}
+              key={index}
+            />
           ))}
         </i>
       </button>
@@ -312,23 +329,15 @@ export default function Home() {
   function openDelivery() {
     if (!selectedRestaurant) return;
     const keyword = encodeURIComponent(`${selectedRestaurant.name} 杭州`);
-    const fallback = `https://s.m.taobao.com/h5?q=${encodeURIComponent(`淘宝闪购 ${selectedRestaurant.name} 杭州`)}`;
-    const timer = window.setTimeout(() => {
-      if (document.visibilityState === "visible") window.location.href = fallback;
-    }, 1400);
-    document.addEventListener(
-      "visibilitychange",
-      () => {
-        if (document.visibilityState === "hidden") window.clearTimeout(timer);
-      },
-      { once: true }
-    );
     window.location.href = `eleme://search?keyword=${keyword}`;
   }
 
-  const amapUrl = selectedRestaurant
-    ? `https://uri.amap.com/search?keyword=${encodeURIComponent(`${selectedRestaurant.name} 杭州`)}&city=杭州&callnative=1`
-    : "#";
+  function openAmap() {
+    if (!selectedRestaurant) return;
+    const keyword = encodeURIComponent(`${selectedRestaurant.name} 杭州`);
+    window.location.href = `https://uri.amap.com/search?keyword=${keyword}&city=杭州&view=list&src=hangzhou-food-wheel&callnative=1`;
+  }
+
   const dishRanking = selectedRestaurant
     ? dishRankings[selectedRestaurant.name]
     : undefined;
@@ -397,11 +406,11 @@ export default function Home() {
             ) : (
               <>
                 <div className="final-actions">
-                  <a href={amapUrl} target="_blank" rel="noreferrer">高德搜店</a>
+                  <button type="button" onClick={openAmap}>高德搜店</button>
                   <button className="delivery-button" onClick={openDelivery}>看看外卖</button>
                   <button className="reset-button" onClick={reset}>全部重来</button>
                 </div>
-                <p className="delivery-note">优先唤起淘宝闪购；未安装时转到淘宝网页搜索。</p>
+                <p className="delivery-note">直接唤起高德地图或淘宝闪购，并自动搜索店名。</p>
               </>
             )}
           </div>

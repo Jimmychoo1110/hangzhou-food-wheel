@@ -46,11 +46,19 @@ test("keeps selection, settlement, and verified dish data on one page", async ()
   ]);
 
   assert.match(page, /wheel-hub/);
-  assert.match(page, /不满意？再转一次/);
+  assert.match(page, /<strong>不满意？<\/strong>/);
+  assert.match(page, /<small>再转一次<\/small>/);
   assert.match(page, /className="final-actions"/);
   assert.match(page, /高德搜店/);
   assert.match(page, /看看外卖/);
   assert.match(page, /全部重来/);
+  assert.match(page, /eleme:\/\/search\?keyword=/);
+  assert.match(page, /uri\.amap\.com\/search\?keyword=/);
+  assert.match(page, /callnative=1/);
+  assert.doesNotMatch(page, /s\.m\.taobao\.com/);
+  assert.match(page, /className="chance-ring"/);
+  assert.match(page, /<strong>不满意？<\/strong>/);
+  assert.match(page, /<small>再转一次<\/small>/);
   assert.match(page, /stage !== "category" && selectedRestaurant/);
   assert.doesNotMatch(page, /className="control-panel"/);
   assert.doesNotMatch(page, /<footer>/);
