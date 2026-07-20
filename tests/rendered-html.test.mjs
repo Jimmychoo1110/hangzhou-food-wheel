@@ -57,6 +57,13 @@ test("keeps selection, settlement, and verified dish data on one page", async ()
   assert.match(page, /callnative=1/);
   assert.doesNotMatch(page, /s\.m\.taobao\.com/);
   assert.match(page, /className="chance-ring"/);
+  assert.match(page, /不想吃那些？点击这里拉入黑名单/);
+  assert.match(page, /categoryBans/);
+  assert.match(page, /restaurantBans/);
+  assert.match(page, /!categoryBans\.includes\(item\)/);
+  assert.match(page, /!restaurantBans\.includes\(item\.name\)/);
+  assert.match(page, /没有更多可转选项/);
+  assert.doesNotMatch(page, /className={`selection-summary/);
   assert.match(page, /<strong>不满意？<\/strong>/);
   assert.match(page, /<small>再转一次<\/small>/);
   assert.match(page, /stage !== "category" && selectedRestaurant/);

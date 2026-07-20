@@ -76,7 +76,17 @@ h1 { margin: 0; font-size: clamp(34px, 5vw, 64px); line-height: 1.06; letter-spa
 .wheel-label {
   position: absolute; transform: translate(-50%, -50%); width: 84px; text-align: center;
   font-size: 13px; line-height: 1.15; font-weight: 950; color: #2d1d17;
-  text-shadow: 0 1px 0 rgba(255,255,255,.55); z-index: 2;
+  text-shadow: 0 1px 0 rgba(255,255,255,.55); z-index: 2; font-family: inherit;
+  border: 0; padding: 5px 2px; background: transparent;
+}
+.wheel-label:disabled { opacity: 1; color: #2d1d17; }
+.wheel.is-ban-mode { cursor: crosshair; }
+.wheel.is-ban-mode .wheel-label { cursor: pointer; }
+.wheel-label.is-banned,
+.wheel-label.is-banned:disabled {
+  color: #716b65;
+  text-decoration: line-through;
+  text-shadow: 0 1px 0 rgba(255,255,255,.75);
 }
 .wheel-label.dense { width: 70px; font-size: 11px; }
 .wheel-hub {
@@ -366,7 +376,7 @@ main {
 
 .wheel-hub .chance-ring {
   position: absolute;
-  inset: -17px;
+  inset: 9px;
   z-index: 0;
   display: block;
   margin: 0;
@@ -382,52 +392,38 @@ main {
   height: auto;
   border-radius: 50%;
   background: conic-gradient(
-    from calc(-58deg + var(--segment-angle)),
-    var(--chance-color) 0 104deg,
-    transparent 104deg 360deg
+    from calc(-17deg + var(--segment-angle)),
+    var(--chance-color) 0 34deg,
+    transparent 34deg 360deg
   );
-  -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 6px), #000 0);
-  mask: radial-gradient(farthest-side, transparent calc(100% - 6px), #000 0);
+  -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 3px), #000 0);
+  mask: radial-gradient(farthest-side, transparent calc(100% - 3px), #000 0);
 }
 
 .wheel-hub .chance-ring b.used { --chance-color: #c9c2b9; }
 
-.selection-summary {
+.ban-toggle {
   width: min(430px, 100%);
-  min-height: 38px;
   margin-top: 10px;
-  padding: 7px 12px;
-  border: 1px dashed #b8aaa0;
-  background: rgba(255,250,240,.72);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  color: #8a7e75;
-  text-align: center;
-}
-
-.selection-summary.show {
+  min-height: 38px;
+  padding: 8px 12px;
+  border: 1px dashed #9d9188;
+  background: rgba(255,250,240,.82);
   color: var(--ink);
-  border-color: var(--red);
-  background: var(--cream);
-}
-
-.selection-summary span {
-  color: var(--red);
-  font-size: 9px;
+  text-align: center;
+  font: inherit;
+  font-size: 12px;
   font-weight: 950;
-  letter-spacing: .1em;
+  cursor: pointer;
 }
 
-.selection-summary strong { font-size: 15px; }
-.selection-summary small { color: #756a61; font-size: 10px; }
-.selection-summary em, .source-pill {
-  font-style: normal;
-  margin-left: 5px;
-  color: #167d64;
-  font-weight: 900;
+.ban-toggle.active {
+  border-color: var(--red);
+  background: #fff0dc;
+  color: var(--red);
 }
+
+.ban-toggle:disabled { cursor: default; color: #827970; background: #eee9e1; }
 
 .confirm-button {
   width: min(430px, 100%);
@@ -496,13 +492,12 @@ main {
   .wheel-hub.has-result .hub-copy { max-width: 67px; }
   .wheel-hub.has-result .hub-copy strong { font-size: 13px; }
   .wheel-hub.has-result .hub-copy small { font-size: 9px; }
-  .wheel-hub .chance-ring { inset: -15px; }
+  .wheel-hub .chance-ring { inset: 8px; }
   .wheel-hub .chance-ring b {
-    -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 5px), #000 0);
-    mask: radial-gradient(farthest-side, transparent calc(100% - 5px), #000 0);
+    -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 3px), #000 0);
+    mask: radial-gradient(farthest-side, transparent calc(100% - 3px), #000 0);
   }
-  .selection-summary { min-height: 35px; margin-top: 8px; padding: 6px 9px; }
-  .selection-summary strong { font-size: 14px; }
+  .ban-toggle { min-height: 35px; margin-top: 8px; padding: 6px 9px; font-size: 11px; }
   .confirm-button { margin-top: 7px; padding: 11px 12px; }
   .dish-board { margin-top: 22px; padding: 18px 12px; }
   .dish-heading { gap: 8px; }
@@ -517,6 +512,6 @@ main {
   .intro-row { min-height: 52px; }
   .wheel-area { padding-top: 18px; }
   .wheel-shell { width: min(320px, calc(100vw - 28px), 49svh); }
-  .selection-summary { margin-top: 6px; }
+  .ban-toggle { margin-top: 6px; }
   .confirm-button { padding: 10px; }
 }

@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo, useRef, useState } from "react";
-import type { CSSProperties, RefObject } from "react";
+import type { CSSProperties, MouseEvent, RefObject } from "react";
 import { dishRankings } from "./dish-rankings";
 import "./wheel.css";
 
@@ -122,6 +122,10 @@ function Wheel({
   currentResult,
   onSpin,
   locked,
+  bannedItems,
+  banMode,
+  onToggleBan,
+  hasAvailable,
 }: {
   items: string[];
   wheelRef: RefObject<HTMLDivElement | null>;
@@ -132,19 +136,37 @@ function Wheel({
   currentResult: string;
   onSpin: () => void;
   locked: boolean;
+  bannedItems: string[];
+  banMode: boolean;
+  onToggleBan: (item: string) => void;
+  hasAvailable: boolean;
 }) {
   const background = useMemo(() => {
     const step = 360 / items.length;
-    return `conic-gradient(${items.map((_, i) => `${colors[i % colors.length]} ${i * step}deg ${(i + 1) * step}deg`).join(",")})`;
-  }, [items]);
+    return `conic-gradient(${items.map((item, i) => `${bannedItems.includes(item) ? "#c9c2b9" : colors[i % colors.length]} ${i * step}deg ${(i + 1) * step}deg`).join(",")})`;
+  }, [items, bannedItems]);
+
+  function toggleSector(event: MouseEvent<HTMLDivElement>) {
+    if (!banMode || spinning || locked) return;
+    const rect = event.currentTarget.getBoundingClientRect();
+    const x = event.clientX - rect.left - rect.width / 2;
+    const y = event.clientY - rect.top - rect.height / 2;
+    const distance = Math.hypot(x, y);
+    if (distance < rect.width * 0.18) return;
+    const angle = (Math.atan2(y, x) * 180) / Math.PI + 90;
+    const normalizedAngle = (angle + 360) % 360;
+    const index = Math.min(items.length - 1, Math.floor(normalizedAngle / (360 / items.length)));
+    onToggleBan(items[index]);
+  }
 
   return (
     <div className="wheel-shell">
       <div className="pointer" ref={pointerRef} aria-hidden="true" />
       <div
         ref={wheelRef}
-        className={`wheel ${spinning ? "is-spinning" : ""}`}
+        className={`wheel ${spinning ? "is-spinning" : ""} ${banMode ? "is-ban-mode" : ""}`}
         style={{ background, transform: `rotate(${rotation}deg)` }}
+        onClick={toggleSector}
         aria-label={`转盘，共 ${items.length} 个选项`}
       >
         {items.map((item, i) => {
@@ -152,13 +174,20 @@ function Wheel({
           const rad = (angle * Math.PI) / 180;
           const radius = items.length > 10 ? 34 : 32;
           return (
-            <span
-              className={`wheel-label ${items.length > 10 ? "dense" : ""}`}
+            <button
+              type="button"
+              className={`wheel-label ${items.length > 10 ? "dense" : ""} ${bannedItems.includes(item) ? "is-banned" : ""}`}
               style={{ left: `${50 + Math.cos(rad) * radius}%`, top: `${50 + Math.sin(rad) * radius}%` }}
+              onClick={(event) => {
+                event.stopPropagation();
+                onToggleBan(item);
+              }}
+              disabled={!banMode || spinning || locked}
+              aria-pressed={bannedItems.includes(item)}
               key={item}
             >
               {item}
-            </span>
+            </button>
           );
         })}
       </div>
@@ -166,8 +195,8 @@ function Wheel({
         className={`wheel-hub ${currentResult ? "has-result" : ""}`}
         type="button"
         onClick={onSpin}
-        disabled={spinning || attempts >= 3 || locked}
-        aria-label={currentResult ? "不满意，再转一次" : "开始转动"}
+        disabled={spinning || attempts >= 3 || locked || !hasAvailable}
+        aria-label={!hasAvailable ? "没有更多可转选项" : currentResult ? "不满意，再转一次" : "开始转动"}
       >
         <span className="hub-copy">
           {spinning ? (
@@ -176,6 +205,8 @@ function Wheel({
             "已选定"
           ) : attempts >= 3 ? (
             "本轮已用完"
+          ) : !hasAvailable ? (
+            "没有更多"
           ) : currentResult ? (
             <>
               <strong>不满意？</strong>
@@ -205,6 +236,9 @@ export default function Home() {
   const [selectedRestaurant, setSelectedRestaurant] = useState<Restaurant | null>(null);
   const [categoryHistory, setCategoryHistory] = useState<string[]>([]);
   const [restaurantHistory, setRestaurantHistory] = useState<string[]>([]);
+  const [categoryBans, setCategoryBans] = useState<string[]>([]);
+  const [restaurantBans, setRestaurantBans] = useState<string[]>([]);
+  const [banMode, setBanMode] = useState(false);
   const [spinning, setSpinning] = useState(false);
   const [settledRotation, setSettledRotation] = useState(0);
   const wheelRef = useRef<HTMLDivElement>(null);
@@ -214,7 +248,10 @@ export default function Home() {
 
   const restaurantItems = selectedCategory ? foodMap[selectedCategory].map((item) => item.name) : [];
   const history = stage === "category" ? categoryHistory : restaurantHistory;
+  const currentBans = stage === "category" ? categoryBans : restaurantBans;
+  const currentItems = stage === "category" ? categories : restaurantItems;
   const currentResult = stage === "category" ? selectedCategory : selectedRestaurant?.name ?? "";
+  const hasAvailable = currentItems.some((item) => !history.includes(item) && !currentBans.includes(item));
 
   function tickPointer(angle: number, sector: number, previousTick: { value: number }) {
     const tick = Math.floor(angle / sector);
@@ -240,10 +277,12 @@ export default function Home() {
 
   function spin() {
     if (spinning || history.length >= 3 || stage === "done" || !wheelRef.current) return;
+    setBanMode(false);
     const pool =
       stage === "category"
-        ? categories.filter((item) => !categoryHistory.includes(item))
-        : foodMap[selectedCategory].filter((item) => !restaurantHistory.includes(item.name));
+        ? categories.filter((item) => !categoryHistory.includes(item) && !categoryBans.includes(item))
+        : foodMap[selectedCategory].filter((item) => !restaurantHistory.includes(item.name) && !restaurantBans.includes(item.name));
+    if (!pool.length) return;
     const picked = pool[Math.floor(Math.random() * pool.length)];
     const pickedName = typeof picked === "string" ? picked : picked.name;
     const allItems = stage === "category" ? categories : restaurantItems;
@@ -307,6 +346,8 @@ export default function Home() {
       rotationRef.current = 0;
       setSettledRotation(0);
       setRestaurantHistory([]);
+      setRestaurantBans([]);
+      setBanMode(false);
       setSelectedRestaurant(null);
       setStage("restaurant");
     } else {
@@ -323,7 +364,20 @@ export default function Home() {
     setSelectedRestaurant(null);
     setCategoryHistory([]);
     setRestaurantHistory([]);
+    setCategoryBans([]);
+    setRestaurantBans([]);
+    setBanMode(false);
     setSpinning(false);
+  }
+
+  function toggleBan(item: string) {
+    if (!banMode || spinning || history.length > 0 || stage === "done") return;
+    const update = stage === "category" ? setCategoryBans : setRestaurantBans;
+    update((previous) => {
+      if (previous.includes(item)) return previous.filter((entry) => entry !== item);
+      if (previous.length >= currentItems.length - 1) return previous;
+      return [...previous, item];
+    });
   }
 
   function openDelivery() {
@@ -386,18 +440,27 @@ export default function Home() {
               currentResult={currentResult}
               onSpin={spin}
               locked={stage === "done"}
+              bannedItems={currentBans}
+              banMode={banMode}
+              onToggleBan={toggleBan}
+              hasAvailable={hasAvailable}
             />
 
-            <div className={`selection-summary ${currentResult ? "show" : ""}`} aria-live="polite">
-              <span>{stage === "category" ? "今晚方向" : "今晚这家"}</span>
-              <strong>{currentResult || "点击圆心开始转"}</strong>
-              {stage !== "category" && selectedRestaurant && (
-                <small>
-                  {selectedRestaurant.note}
-                  {selectedRestaurant.source && <em>{selectedRestaurant.source}补充</em>}
-                </small>
-              )}
-            </div>
+            {stage !== "done" && (
+              <button
+                type="button"
+                className={`ban-toggle ${banMode ? "active" : ""}`}
+                onClick={() => setBanMode((active) => !active)}
+                disabled={spinning || history.length > 0}
+                aria-pressed={banMode}
+              >
+                {history.length > 0
+                  ? `黑名单已锁定${currentBans.length ? ` · 已屏蔽 ${currentBans.length} 个` : ""}`
+                  : banMode
+                    ? `直接点转盘选择 · 选好了点这里（${currentBans.length}）`
+                    : "不想吃那些？点击这里拉入黑名单"}
+              </button>
+            )}
 
             {stage !== "done" ? (
               <button className="confirm-button" onClick={confirm} disabled={!currentResult || spinning}>
