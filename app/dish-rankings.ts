@@ -46,6 +46,34 @@ export const dishRankings: Record<string, DishRanking> = {
       { name: "蜜薯粉蒸肉", imageUrl: "https://qcloud.dpfile.com/pc/7brdO6QlMyUhLwVRN5AMHgZ27DwCTlKv4qAQaB3pQFmVLBeDnL56KS5XV3aKu-Wzl0cm-Lf9tDMlLZpO7rb3bg.jpg", evidence: "大众点评网友推荐", imageNote: "同店用户实拍参考" },
     ],
   },
+  四灶儿: {
+    checkedAt: "2026-07-20",
+    methodology:
+      "按大众点评“四灶儿·地道杭帮菜2005（湖墅南路店）”公开“网友推荐”顺序整理；图片均来自该门店公开用户实拍，仅作同店菜品参考。",
+    metricLabel: "大众点评网友推荐",
+    sources: [
+      {
+        label: "四灶儿·地道杭帮菜2005（湖墅南路店）公开推荐菜",
+        url: "https://m.dianping.com/shop/1359475085?msource=applemaps",
+      },
+      {
+        label: "四灶儿·地道杭帮菜2005（湖墅南路店）用户实拍",
+        url: "https://www.dianping.com/shop/1359475085/photos",
+      },
+    ],
+    dishes: [
+      { name: "酒酿馒头红烧肉", recommendations: 262, imageUrl: "https://qcloud.dpfile.com/pc/CRmBQioUd1jtSq2CvuEJoc5o24obGZJQMLpXlGk6rmZMqKUPnvbfbOY6kUekmg3Il0cm-Lf9tDMlLZpO7rb3bg.jpg", imageNote: "同店用户实拍参考" },
+      { name: "四灶儿小炒王", recommendations: 142, imageUrl: "https://qcloud.dpfile.com/pc/w2YaeHOe4x02NYMUOMpxNLE2n___8INNurwss2OnOkAVR-_sdvm-NAaAzwob1Fe2l0cm-Lf9tDMlLZpO7rb3bg.jpg", imageNote: "同店用户实拍参考" },
+      { name: "脆皮大肠头", recommendations: 88, imageUrl: "https://qcloud.dpfile.com/pc/uC4D8qFeO3FJVK9kjuFXSj33UcCWGUYR8ieibAllNt3u77miMw3hrWJKV5GKx2IFl0cm-Lf9tDMlLZpO7rb3bg.jpg", imageNote: "同店用户实拍参考" },
+      { name: "脆皮大肠", recommendations: 55, imageUrl: "https://qcloud.dpfile.com/pc/WNw5gGHo05eI73-b1pyLN64ipCRC8vs8MwTpOO1ItdsLU4Qx35qu4-dDJdTK1HLnl0cm-Lf9tDMlLZpO7rb3bg.jpg", imageNote: "同店用户实拍参考" },
+      { name: "石锅虾仁豆腐", recommendations: 51, imageUrl: "https://qcloud.dpfile.com/pc/Tkp-bJ6yvtscQLHQHAYt-69242Tg8-5Nkvfzj8OJxlXkBGDdxR3tJzwM1hXJQ5hOl0cm-Lf9tDMlLZpO7rb3bg.jpg", imageNote: "同店用户实拍参考" },
+      { name: "熟醉沼虾", recommendations: 48, imageUrl: "https://qcloud.dpfile.com/pc/PRV6pa0Au4TvKZeg4459BkwV42-rD_BwFANYqv44e8Wx-tf7xW5zFVPRXwL8FUucl0cm-Lf9tDMlLZpO7rb3bg.jpg", imageNote: "同店用户实拍参考" },
+      { name: "酒酿馒头", recommendations: 42, imageUrl: "https://qcloud.dpfile.com/pc/cKDk3moo_pO0i0sB7dpt12N5dWCNfo3jTTiS39b2PIjT8ggm_Z833fznYcAD2GJ2l0cm-Lf9tDMlLZpO7rb3bg.jpg", imageNote: "同店用户实拍参考" },
+      { name: "干炸臭豆腐", recommendations: 23, imageUrl: "https://qcloud.dpfile.com/pc/RmVt082FONzzq9WDHv31zvifMDW0dIGflp7T1A5ifER8h1Gq0IzbUh8SuJP8cmu_l0cm-Lf9tDMlLZpO7rb3bg.jpg", imageNote: "同店用户实拍参考" },
+      { name: "响油鳝丝", recommendations: 14, imageUrl: "https://qcloud.dpfile.com/pc/ivARB0tSAqgQaYbqfBy5XjxYCPpjhzwaA4l1iAnT1F1YZVVfRi2TqgSxN_xBIYijl0cm-Lf9tDMlLZpO7rb3bg.jpg", imageNote: "同店用户实拍参考" },
+      { name: "四灶儿一锅鲜", recommendations: 12, imageUrl: "https://qcloud.dpfile.com/pc/EHaUBxeri9Aa_oL2eAeMY7zbmd-YHYtobHVBEd4SUFyhBeJEmH0HzvKiyU6FAdEgl0cm-Lf9tDMlLZpO7rb3bg.jpg", imageNote: "同店用户实拍参考" },
+    ],
+  },
   东京烧肉: {
     checkedAt: "2026-07-20",
     methodology:
