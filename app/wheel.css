@@ -376,7 +376,7 @@ main {
 
 .wheel-hub .chance-ring {
   position: absolute;
-  inset: 9px;
+  inset: 8px;
   z-index: 0;
   display: block;
   margin: 0;
@@ -392,12 +392,12 @@ main {
   height: auto;
   border-radius: 50%;
   background: conic-gradient(
-    from calc(-17deg + var(--segment-angle)),
+    from calc(-52deg + var(--segment-angle)),
     var(--chance-color) 0 104deg,
     transparent 104deg 360deg
   );
-  -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 5px), #000 0);
-  mask: radial-gradient(farthest-side, transparent calc(100% - 5px), #000 0);
+  -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 6px), #000 0);
+  mask: radial-gradient(farthest-side, transparent calc(100% - 6px), #000 0);
 }
 
 .wheel-hub .chance-ring b.used { --chance-color: #c9c2b9; }
@@ -492,10 +492,10 @@ main {
   .wheel-hub.has-result .hub-copy { max-width: 67px; }
   .wheel-hub.has-result .hub-copy strong { font-size: 13px; }
   .wheel-hub.has-result .hub-copy small { font-size: 9px; }
-  .wheel-hub .chance-ring { inset: 8px; }
+  .wheel-hub .chance-ring { inset: 7px; }
   .wheel-hub .chance-ring b {
-    -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 4px), #000 0);
-    mask: radial-gradient(farthest-side, transparent calc(100% - 4px), #000 0);
+    -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 5px), #000 0);
+    mask: radial-gradient(farthest-side, transparent calc(100% - 5px), #000 0);
   }
   .ban-toggle { min-height: 35px; margin-top: 8px; padding: 6px 9px; font-size: 11px; }
   .confirm-button { margin-top: 7px; padding: 11px 12px; }
