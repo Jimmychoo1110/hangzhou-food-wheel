@@ -25,8 +25,8 @@ const foodMap: Record<string, Restaurant[]> = {
     { name: "颂", note: "精致中餐" },
     { name: "金沙厅", note: "杭帮菜" },
     { name: "桂语山房", note: "江南意境菜" },
-    { name: "堡中堡", note: "朋友聚餐" },
-    { name: "同乐坊", note: "家常正餐" },
+    { name: "宝中宝食府", note: "杭帮家常菜" },
+    { name: "同乐舫", note: "老牌粤菜" },
     { name: "李白图书馆餐厅", note: "西溪湿地店", source: "高德榜单" },
     { name: "乔村二十八道", note: "未来科技城店", source: "高德榜单" },
   ],
@@ -118,12 +118,20 @@ function Wheel({
   pointerRef,
   spinning,
   rotation,
+  attempts,
+  currentResult,
+  onSpin,
+  locked,
 }: {
   items: string[];
   wheelRef: RefObject<HTMLDivElement | null>;
   pointerRef: RefObject<HTMLDivElement | null>;
   spinning: boolean;
   rotation: number;
+  attempts: number;
+  currentResult: string;
+  onSpin: () => void;
+  locked: boolean;
 }) {
   const background = useMemo(() => {
     const step = 360 / items.length;
@@ -153,8 +161,23 @@ function Wheel({
             </span>
           );
         })}
-        <div className="wheel-hub">吃</div>
       </div>
+      <button
+        className={`wheel-hub ${currentResult ? "has-result" : ""}`}
+        type="button"
+        onClick={onSpin}
+        disabled={spinning || attempts >= 3 || locked}
+        aria-label={currentResult ? "不满意，再转一次" : "开始转动"}
+      >
+        <span>
+          {spinning ? "转动中" : locked ? "已选定" : attempts >= 3 ? "本轮已用完" : currentResult ? "不满意？再转一次" : "转"}
+        </span>
+        <i aria-hidden="true">
+          {[0, 1, 2].map((index) => (
+            <b className={index < attempts ? "used" : ""} key={index} />
+          ))}
+        </i>
+      </button>
     </div>
   );
 }
@@ -323,166 +346,132 @@ export default function Home() {
         </div>
       </header>
 
-      {stage !== "done" ? (
-        <section className="game-card">
+      <section className="game-card">
+        <div className="intro-row">
           <div className="intro">
             <p className="eyebrow">{stage === "category" ? "ROUND 01 · 定个方向" : "ROUND 02 · 选出今晚这家"}</p>
             <h1>{stage === "category" ? "今晚吃什么！" : "吃哪家！"}</h1>
           </div>
 
-          {stage === "restaurant" && (
+          {selectedCategory && (
             <div className="sticker-row" aria-live="polite">
-              <div className="category-sticker" key={selectedCategory}>
+              <div className="category-sticker" key={`${selectedCategory}-${categoryHistory.length}`}>
                 <img src="category-ticket.png" alt="" />
                 <strong>{selectedCategory}</strong>
                 <span className="comic-pop" aria-hidden="true">啪！</span>
               </div>
             </div>
           )}
+        </div>
 
-          <div className="game-grid">
-            <div className="wheel-area">
-              <Wheel
-                key={stage === "category" ? "category-wheel" : `restaurant-wheel-${selectedCategory}`}
-                items={stage === "category" ? categories : restaurantItems}
-                wheelRef={wheelRef}
-                pointerRef={pointerRef}
-                spinning={spinning}
-                rotation={settledRotation}
-              />
+        <div className="game-grid">
+          <div className="wheel-area">
+            <Wheel
+              key={stage === "category" ? "category-wheel" : `restaurant-wheel-${selectedCategory}`}
+              items={stage === "category" ? categories : restaurantItems}
+              wheelRef={wheelRef}
+              pointerRef={pointerRef}
+              spinning={spinning}
+              rotation={settledRotation}
+              attempts={history.length}
+              currentResult={currentResult}
+              onSpin={spin}
+              locked={stage === "done"}
+            />
+
+            <div className={`selection-summary ${currentResult ? "show" : ""}`} aria-live="polite">
+              <span>{stage === "category" ? "今晚方向" : "今晚这家"}</span>
+              <strong>{currentResult || "点击圆心开始转"}</strong>
+              {stage !== "category" && selectedRestaurant && (
+                <small>
+                  {selectedRestaurant.note}
+                  {selectedRestaurant.source && <em>{selectedRestaurant.source}补充</em>}
+                </small>
+              )}
             </div>
 
-            <aside className="control-panel">
-              <div className="counter">
-                <span>本轮机会</span>
-                <div>{[0, 1, 2].map((i) => <b className={i < history.length ? "used" : ""} key={i} />)}</div>
-                <strong>{3 - history.length}<small> 次</small></strong>
-              </div>
-
-              <button className="spin-button" onClick={spin} disabled={spinning || history.length >= 3}>
-                {spinning ? "转盘正在减速…" : history.length >= 3 ? "三次机会已用完" : currentResult ? "不满意，再转一次" : "用力转一下"}
-              </button>
-
-              <div className={`result-ticket ${currentResult ? "show" : ""}`} aria-live="polite">
-                <span>本次抽中</span>
-                <strong>{currentResult || "等待转动"}</strong>
-                {stage === "restaurant" && selectedRestaurant && (
-                  <small>
-                    {selectedRestaurant.note}
-                    {selectedRestaurant.source && <em>{selectedRestaurant.source}补充</em>}
-                  </small>
-                )}
-              </div>
-
+            {stage !== "done" ? (
               <button className="confirm-button" onClick={confirm} disabled={!currentResult || spinning}>
                 {stage === "category" ? "就吃这类，选店去 →" : "确认，就吃这家！"}
               </button>
-
-              {history.length > 0 && (
-                <div className="history">
-                  <span>本轮记录</span>
-                  <ol>
-                    {history.map((item, i) => (
-                      <li className={item === currentResult ? "latest" : ""} key={item}>
-                        <b>0{i + 1}</b>{item}
-                      </li>
-                    ))}
-                  </ol>
-                </div>
-              )}
-            </aside>
-          </div>
-
-          {stage === "restaurant" && selectedRestaurant && (
-            dishRanking ? (
-              <section className="dish-board">
-                <div className="dish-heading">
-                  <div>
-                    <p className="eyebrow">DISH RANKING · 品牌热门菜</p>
-                    <h2>{selectedRestaurant.name}｜真实推荐菜</h2>
-                  </div>
-                  <span>已核实 {dishRanking.dishes.length} 道</span>
-                </div>
-
-                <div className="dish-grid">
-                  {dishRanking.dishes.map((dish, index) => (
-                    <article className="dish-card" key={dish.name}>
-                      <a
-                        className="dish-photo"
-                        href={dish.imageUrl}
-                        target="_blank"
-                        rel="noreferrer"
-                        aria-label={`查看${selectedRestaurant.name}${dish.name}实拍原图`}
-                      >
-                        <img
-                          src={dish.imageUrl}
-                          alt={`${selectedRestaurant.name} · ${dish.name}实拍`}
-                          loading="lazy"
-                          referrerPolicy="no-referrer"
-                        />
-                        <b>TOP {index + 1}</b>
-                      </a>
-                      <div className="dish-copy">
-                        <h3>{dish.name}</h3>
-                        <p>{dish.recommendations.toLocaleString("zh-CN")} 次公开推荐</p>
-                        <a href={dish.imageUrl} target="_blank" rel="noreferrer">
-                          查看实拍原图 ↗
-                        </a>
-                      </div>
-                    </article>
-                  ))}
-                </div>
-
-                <p className="dish-method">
-                  {dishRanking.methodology} 推荐数来自公开页面，用于判断网友热度，不代表官方销量。核实日期：{dishRanking.checkedAt}。
-                </p>
-                <div className="dish-sources">
-                  <span>核实来源</span>
-                  {dishRanking.sources.map((source) => (
-                    <a href={source.url} target="_blank" rel="noreferrer" key={source.url}>
-                      {source.label} ↗
-                    </a>
-                  ))}
-                </div>
-              </section>
             ) : (
-              <section className="dish-board dish-verifying">
-                <p className="eyebrow">DISH RANKING · 等待逐类核实</p>
-                <h2>{selectedRestaurant.name}｜品牌菜品尚未整理</h2>
-                <p>这里按品牌汇总，不要求具体分店。只有找到可核实的菜名、热度依据和品牌实拍后才会展示，数量不足 10 道时不会补齐。</p>
-                <div className="verify-actions">
-                  <a href={`https://www.xiaohongshu.com/search_result?keyword=${encodeURIComponent(`${selectedRestaurant.name} 杭州 招牌菜`)}`} target="_blank" rel="noreferrer">
-                    去小红书核实
-                  </a>
-                  <a href={`https://uri.amap.com/search?keyword=${encodeURIComponent(`${selectedRestaurant.name} 杭州`)}&city=杭州&callnative=1`} target="_blank" rel="noreferrer">
-                    去高德查看
-                  </a>
+              <>
+                <div className="final-actions">
+                  <a href={amapUrl} target="_blank" rel="noreferrer">高德搜店</a>
+                  <button className="delivery-button" onClick={openDelivery}>看看外卖</button>
+                  <button className="reset-button" onClick={reset}>全部重来</button>
                 </div>
-              </section>
-            )
-          )}
-        </section>
-      ) : (
-        <section className="final-card">
-          <div className="burst">✦</div>
-          <p className="eyebrow">今晚的答案已经揭晓</p>
-          <h1>{selectedRestaurant?.name}</h1>
-          <p className="final-category">{selectedCategory} · {selectedRestaurant?.note}</p>
-          {selectedRestaurant?.source && <span className="source-pill">高德榜单补充</span>}
-          <div className="final-actions">
-            <a href={amapUrl} target="_blank" rel="noreferrer">去高德搜这家 ↗</a>
-            <button className="delivery-button" onClick={openDelivery}>看看有没有外卖</button>
-            <button className="reset-button" onClick={reset}>全部重来</button>
+                <p className="delivery-note">优先唤起淘宝闪购；未安装时转到淘宝网页搜索。</p>
+              </>
+            )}
           </div>
-          <p className="delivery-note">会优先唤起淘宝闪购（原饿了么）；未安装时转到淘宝网页搜索。</p>
-          <p className="promise">不许反悔。现在，出发！</p>
-        </section>
-      )}
+        </div>
 
-      <footer>
-        <span>HANGZHOU FOOD ROULETTE</span>
-        <p>内置 {categories.length} 个大类 · {Object.values(foodMap).flat().length} 个杭州吃饭灵感</p>
-      </footer>
+        {stage !== "category" && selectedRestaurant && (
+          dishRanking ? (
+            <section className="dish-board">
+              <div className="dish-heading">
+                <div>
+                  <p className="eyebrow">DISH RANKING · 品牌热门菜</p>
+                  <h2>{selectedRestaurant.name}｜真实推荐菜</h2>
+                </div>
+                <span>已核实 {dishRanking.dishes.length} 道</span>
+              </div>
+
+              <div className="dish-grid">
+                {dishRanking.dishes.map((dish, index) => (
+                  <article className="dish-card" key={dish.name}>
+                    <a
+                      className="dish-photo"
+                      href={dish.imageUrl}
+                      target="_blank"
+                      rel="noreferrer"
+                      aria-label={`查看${selectedRestaurant.name}${dish.name}实拍原图`}
+                    >
+                      <img
+                        src={dish.imageUrl}
+                        alt={`${selectedRestaurant.name} · ${dish.name}实拍`}
+                        loading="lazy"
+                        referrerPolicy="no-referrer"
+                      />
+                      <b>TOP {index + 1}</b>
+                    </a>
+                    <div className="dish-copy">
+                      <h3>{dish.name}</h3>
+                      <p>
+                        {dish.recommendations !== undefined
+                          ? `${dish.recommendations.toLocaleString("zh-CN")} ${dishRanking.metricLabel ?? "次公开推荐"}`
+                          : dish.evidence ?? "公开推荐菜"}
+                      </p>
+                      <a href={dish.imageUrl} target="_blank" rel="noreferrer">
+                        查看实拍原图 ↗
+                      </a>
+                    </div>
+                  </article>
+                ))}
+              </div>
+
+              <p className="dish-method">
+                {dishRanking.methodology} 所列依据来自公开页面，不代表官方销量或官方销售排名。核实日期：{dishRanking.checkedAt}。
+              </p>
+              <div className="dish-sources">
+                <span>核实来源</span>
+                {dishRanking.sources.map((source) => (
+                  <a href={source.url} target="_blank" rel="noreferrer" key={source.url}>
+                    {source.label} ↗
+                  </a>
+                ))}
+              </div>
+            </section>
+          ) : (
+            <section className="dish-board dish-verifying">
+              <p className="eyebrow">DISH RANKING · 等待逐类核实</p>
+              <h2>{selectedRestaurant.name}｜品牌菜品尚未整理</h2>
+              <p>这里只展示能核实菜名、热度依据和品牌实拍的内容；不足 10 道时不会补齐。</p>
+            </section>
+          )
+        )}
+      </section>
     </main>
   );
 }
