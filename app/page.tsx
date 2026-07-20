@@ -491,7 +491,7 @@ export default function Home() {
                   <article className="dish-card" key={dish.name}>
                     <a
                       className="dish-photo"
-                      href={dish.imageUrl}
+                      href={dish.imageSourceUrl ?? dish.imageUrl}
                       target="_blank"
                       rel="noreferrer"
                       aria-label={
@@ -520,8 +520,12 @@ export default function Home() {
                           : dish.evidence ?? "公开推荐菜"}
                       </p>
                       {dish.imageNote ? <small>{dish.imageNote}</small> : null}
-                      <a href={dish.imageUrl} target="_blank" rel="noreferrer">
-                        查看实拍原图 ↗
+                      <a
+                        href={dish.imageSourceUrl ?? dish.imageUrl}
+                        target="_blank"
+                        rel="noreferrer"
+                      >
+                        查看菜品实拍来源 ↗
                       </a>
                     </div>
                   </article>

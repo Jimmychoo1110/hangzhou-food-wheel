@@ -1,6 +1,9 @@
+import { verifiedDishRankings } from "./verified-dish-rankings";
+
 export type DishRankingItem = {
   name: string;
   imageUrl: string;
+  imageSourceUrl?: string;
   recommendations?: number;
   evidence?: string;
   imageNote?: string;
@@ -938,3 +941,575 @@ export const dishRankings: Record<string, DishRanking> = {
     ],
   },
 };
+
+const legacyUnverifiedRankingKeys = [
+  "阿英川菜",
+  "德源",
+  "绿面",
+  "意美家",
+  "草家酱蟹",
+  "竹里",
+  "赠李白",
+  "湘香蒸菜馆",
+  "不万能先生",
+  "Three Fingers",
+  "Popeyes",
+  "月龙吟",
+  "发酵食堂",
+  "老秦凉都黄牛肉馆",
+  "胖哥俩肉蟹煲",
+  "荆九爷",
+  "小厨师",
+  "洪恩",
+  "潮中人",
+  "泉市",
+  "鱼火锅",
+  "汉巴味德",
+  "山缓缓",
+  "川味泡菜",
+  "绿茶餐厅",
+  "新白鹿",
+  "外婆家",
+  "老头儿油爆虾",
+  "海底捞",
+  "王品牛排",
+  "跑马场",
+  "鱼汀",
+  "慧娟面馆",
+  "奎元馆",
+  "中式融合不等",
+  "肉肉大米",
+  "十八号酒馆",
+  "广西菜",
+  "四灶儿",
+];
+
+for (const key of legacyUnverifiedRankingKeys) {
+  delete dishRankings[key];
+}
+
+const verifiedMethodology =
+  "逐道菜人工核对菜名与同店实拍；仅保留画面可明确辨认、且属于公开推荐榜单的菜品，不足 10 道时不补造。";
+
+Object.assign(dishRankings, {
+  德源: {
+    checkedAt: "2026-07-20",
+    methodology: verifiedMethodology,
+    metricLabel: "公开推荐 · 图文已核对",
+    sources: [
+      {
+        label: "清真·德元兰州纯汤牛肉面公开推荐菜",
+        url: "https://m.dianping.com/shop/772618307",
+      },
+    ],
+    dishes: [
+      {
+        name: "纯汤牛肉面",
+        imageUrl:
+          "https://p0.meituan.net/biztone/b5aba162518416ccea4dcae162cb702c436153.jpg",
+        imageSourceUrl:
+          "https://www.dianping.com/shop/H6uztsj2VAK1jxCF/photos/tag-%E8%8F%9C-%E7%BA%AF%E6%B1%A4%E7%89%9B%E8%82%89%E9%9D%A2?pg=1",
+        recommendations: 163,
+      },
+    ],
+  },
+  意美家: {
+    checkedAt: "2026-07-20",
+    methodology: verifiedMethodology,
+    metricLabel: "公开推荐 · 图文已核对",
+    sources: [
+      {
+        label: "意美家·好牛排&好披萨公开推荐菜",
+        url: "https://sg.trip.com/moments/detail/hangzhou-14-144610600/",
+      },
+    ],
+    dishes: [
+      {
+        name: "干式熟成牛排",
+        imageUrl:
+          "https://qcloud.dpfile.com/pc/iQKAQCExEZskqi1gU-5gr6cJQomQKIwq0Cc0Gi7xGw2KLzJ144rZkzyiTeu3d-o9l0cm-Lf9tDMlLZpO7rb3bg.jpg",
+        imageSourceUrl:
+          "https://www.dianping.com/shop/H9WtdwsxAU6LB9yX/photos/tag-%E8%8F%9C-%E5%B9%B2%E5%BC%8F%E7%86%9F%E6%88%90%E7%89%9B%E6%8E%92?pg=1",
+      },
+    ],
+  },
+  草家酱蟹: {
+    checkedAt: "2026-07-20",
+    methodology: verifiedMethodology,
+    metricLabel: "公开推荐 · 图文已核对",
+    sources: [
+      {
+        label: "草家酱蟹泡菜坊公开推荐菜",
+        url: "https://gs.ctrip.com/html5/you/foods/fooddetail/155/133076955.html",
+      },
+    ],
+    dishes: [
+      {
+        name: "草家酱油蟹",
+        imageUrl:
+          "https://qcloud.dpfile.com/pc/R4MEuWLyStfMB6peF0O7jE5yK3VMYWLGxZKfa2SLua_j0zgm-eqB7cdt0Jpezodyl0cm-Lf9tDMlLZpO7rb3bg.jpg",
+        imageSourceUrl:
+          "https://www.dianping.com/shop/G4XYx3dNtTIVVNkZ/photos/tag-%E8%8F%9C-%E8%8D%89%E5%AE%B6%E9%85%B1%E6%B2%B9%E8%9F%B9?pg=1",
+      },
+    ],
+  },
+  竹里: {
+    checkedAt: "2026-07-20",
+    methodology: verifiedMethodology,
+    metricLabel: "公开推荐 · 图文已核对",
+    sources: [
+      {
+        label: "竹哩·环球美食公开推荐菜",
+        url: "https://wxredian.com/art?id=cb2014c09ba66e1184aa7967bd95a76d",
+      },
+    ],
+    dishes: [
+      {
+        name: "海鲜大拼盘",
+        imageUrl:
+          "https://qcloud.dpfile.com/pc/9_Rc5d90F-hkbEuyTTO-Vs__UjZ-bkOBV_Nwsql6A6HkG7Vyjz1gw4wCX4HAhlLNl0cm-Lf9tDMlLZpO7rb3bg.jpg",
+        imageSourceUrl:
+          "https://www.dianping.com/shop/l7CPfkoQ3ptgoSyC/photos/tag-%E8%8F%9C-%E6%B5%B7%E9%B2%9C%E5%A4%A7%E6%8B%BC%E7%9B%98?pg=1",
+      },
+      {
+        name: "刺身拼盘",
+        imageUrl:
+          "https://qcloud.dpfile.com/pc/H2uuWRtZgZdRls9Hbw89K3Vn-BryeiWZQkdlxWIfsmKuCamBoC-wROHJ2QAEufNll0cm-Lf9tDMlLZpO7rb3bg.jpg",
+        imageSourceUrl:
+          "https://www.dianping.com/shop/l7CPfkoQ3ptgoSyC/photos/tag-%E8%8F%9C-%E5%88%BA%E8%BA%AB%E6%8B%BC%E7%9B%98?pg=1",
+      },
+    ],
+  },
+  赠李白: {
+    checkedAt: "2026-07-20",
+    methodology: verifiedMethodology,
+    metricLabel: "公开推荐 · 图文已核对",
+    sources: [
+      {
+        label: "赠李白·江南院子公开推荐菜",
+        url: "https://m.dianping.com/shop/915841275?msource=applemaps",
+      },
+    ],
+    dishes: [
+      {
+        name: "磁器口毛血旺",
+        imageUrl:
+          "https://qcloud.dpfile.com/pc/IWn9a1Vppvl0B6BnfohKDvVMbaF719pu1BqA3N_QnFa7fygzondHXh-hPymJKuyjl0cm-Lf9tDMlLZpO7rb3bg.jpg",
+        imageSourceUrl:
+          "https://www.dianping.com/shop/915841275/photos/tag-%E8%8F%9C-%E7%A3%81%E5%99%A8%E5%8F%A3%E6%AF%9B%E8%A1%80%E6%97%BA?pg=1",
+      },
+    ],
+  },
+  湘香蒸菜馆: {
+    checkedAt: "2026-07-20",
+    methodology: verifiedMethodology,
+    metricLabel: "公开推荐 · 图文已核对",
+    sources: [
+      {
+        label: "湘香蒸菜馆公开推荐菜",
+        url: "https://m.dianping.com/shop/2340397?msource=applemaps",
+      },
+    ],
+    dishes: [
+      {
+        name: "酱油蒸河虾",
+        imageUrl:
+          "https://qcloud.dpfile.com/pc/0BGMflYzPUx5hazdbczZQWVMkoCMB_ZCRf2QIxYRk6jp1FXOa6D3KVcDPG3HHH8hl0cm-Lf9tDMlLZpO7rb3bg.jpg",
+        imageSourceUrl:
+          "https://www.dianping.com/shop/2340397/photos/tag-%E8%8F%9C-%E9%85%B1%E6%B2%B9%E8%92%B8%E6%B2%B3%E8%99%BE?pg=1",
+        recommendations: 322,
+      },
+    ],
+  },
+  不万能先生: {
+    checkedAt: "2026-07-20",
+    methodology: verifiedMethodology,
+    metricLabel: "公开推荐 · 图文已核对",
+    sources: [
+      {
+        label: "不万能先生火锅公开推荐菜",
+        url: "https://m.dianping.com/shop/1336506885?msource=applemaps",
+      },
+    ],
+    dishes: [
+      {
+        name: "冰豆花",
+        imageUrl:
+          "https://qcloud.dpfile.com/pc/Wn79_uqH1qBBV_mS7xJ7pD5wQCASLSx9Vy55f75xS8yBcpajwsjCg0mTx6eQzyUKl0cm-Lf9tDMlLZpO7rb3bg.jpg",
+        imageSourceUrl:
+          "https://www.dianping.com/shop/1336506885/photos/tag-%E8%8F%9C-%E5%86%B0%E8%B1%86%E8%8A%B1?pg=1",
+        recommendations: 31,
+      },
+    ],
+  },
+  "Three Fingers": {
+    checkedAt: "2026-07-20",
+    methodology: verifiedMethodology,
+    metricLabel: "公开推荐 · 图文已核对",
+    sources: [
+      {
+        label: "THREE FINGERS公开推荐菜",
+        url: "https://m.dianping.com/shop/1372052713",
+      },
+    ],
+    dishes: [
+      {
+        name: "芝士汉堡",
+        imageUrl:
+          "https://qcloud.dpfile.com/pc/RIOdaQdzTAaVoXqs8pxRDmHqFmW1ebA7H6EQfh87vTWph5-a9LefJ1jYD58MCeJal0cm-Lf9tDMlLZpO7rb3bg.jpg",
+        imageSourceUrl:
+          "https://www.dianping.com/shop/1372052713/photos/tag-%E8%8F%9C-%E8%8A%9D%E5%A3%AB%E6%B1%89%E5%A0%A1?pg=1",
+        recommendations: 68,
+      },
+      {
+        name: "薯条",
+        imageUrl:
+          "https://qcloud.dpfile.com/pc/ekvdfSRIkT9FBw4d2BO721rircKuxQyyuPwEb3qJXFeiGdm8pmXxrav3uMJ7Q5Yrl0cm-Lf9tDMlLZpO7rb3bg.jpg",
+        imageSourceUrl:
+          "https://www.dianping.com/shop/1372052713/photos/tag-%E8%8F%9C-%E8%96%AF%E6%9D%A1?pg=1",
+        recommendations: 38,
+      },
+      {
+        name: "肉酱汉堡",
+        imageUrl:
+          "https://qcloud.dpfile.com/pc/e_yn6AtfFoPw15BVkM8AVXYVVgRZHvJ30qXxeF5Gu4N7NX1EbhDPruXu4Q-yKt3ol0cm-Lf9tDMlLZpO7rb3bg.jpg",
+        imageSourceUrl:
+          "https://www.dianping.com/shop/1372052713/photos/tag-%E8%8F%9C-%E8%82%89%E9%85%B1%E6%B1%89%E5%A0%A1?pg=1",
+        recommendations: 28,
+      },
+      {
+        name: "经典汉堡",
+        imageUrl:
+          "https://qcloud.dpfile.com/pc/ckWIXNG5V1SQ3ccNt0yNtQT_OyP2weozWd-lFq058vWDRwXz2N8FyHYBOQYjWTmDl0cm-Lf9tDMlLZpO7rb3bg.jpg",
+        imageSourceUrl:
+          "https://www.dianping.com/shop/1372052713/photos/tag-%E8%8F%9C-%E7%BB%8F%E5%85%B8%E6%B1%89%E5%A0%A1?pg=1",
+        recommendations: 13,
+      },
+      {
+        name: "双层牛肉堡",
+        imageUrl:
+          "https://qcloud.dpfile.com/pc/mbHz2wzGkOjZ4U-uyZb34XCYYcdJBzi_LEAncOU2d83PmgMTRZ6S51ChWDmtQU-el0cm-Lf9tDMlLZpO7rb3bg.jpg",
+        imageSourceUrl:
+          "https://www.dianping.com/shop/1372052713/photos/tag-%E8%8F%9C-%E5%8F%8C%E5%B1%82%E7%89%9B%E8%82%89%E5%A0%A1?pg=1",
+        recommendations: 3,
+      },
+      {
+        name: "胡椒博士碳酸饮料",
+        imageUrl:
+          "https://qcloud.dpfile.com/pc/AEFyA3vGU7bBEU2VIP7wHV1aJXHn07iX7KliC6ptSZhihacnKENHlbzs2lk-8jO7l0cm-Lf9tDMlLZpO7rb3bg.jpg",
+        imageSourceUrl:
+          "https://www.dianping.com/shop/1372052713/photos/tag-%E8%8F%9C-%E8%83%A1%E6%A4%92%E5%8D%9A%E5%A3%AB%E7%A2%B3%E9%85%B8%E9%A5%AE%E6%96%99?pg=1",
+        recommendations: 3,
+      },
+    ],
+  },
+  Popeyes: {
+    checkedAt: "2026-07-20",
+    methodology: verifiedMethodology,
+    metricLabel: "公开推荐 · 图文已核对",
+    sources: [
+      {
+        label: "Popeyes公开推荐菜",
+        url: "https://m.dianping.com/shop/1860782531?msource=applemaps",
+      },
+    ],
+    dishes: [
+      {
+        name: "卡真脆薯条",
+        imageUrl:
+          "https://qcloud.dpfile.com/pc/cRJMB8j39sUJZBdUN3Hro2Yb42taGD4hsiFjdw4KrU49JyASPPsAY4HKActKSJLEl0cm-Lf9tDMlLZpO7rb3bg.jpg",
+        imageSourceUrl:
+          "https://www.dianping.com/shop/1860782531/photos/tag-%E8%8F%9C-%E5%8D%A1%E7%9C%9F%E8%84%86%E8%96%AF%E6%9D%A1?pg=1",
+      },
+      {
+        name: "香辣酪乳鸡腿堡",
+        imageUrl:
+          "https://qcloud.dpfile.com/pc/s0qOe_ozaCWew5R1QlC96v2LnTUSgk2GX3nsxw2aMyR2SQfVv-GUKZxeoM-v1_arl0cm-Lf9tDMlLZpO7rb3bg.jpg",
+        imageSourceUrl:
+          "https://www.dianping.com/shop/1860782531/photos/tag-%E8%8F%9C-%E9%A6%99%E8%BE%A3%E9%85%AA%E4%B9%B3%E9%B8%A1%E8%85%BF%E5%A0%A1?pg=1",
+        recommendations: 15,
+      },
+    ],
+  },
+  月龙吟: {
+    checkedAt: "2026-07-20",
+    methodology: verifiedMethodology,
+    metricLabel: "公开推荐 · 图文已核对",
+    sources: [
+      {
+        label: "月龍吟公开推荐菜",
+        url: "https://m.dianping.com/shop/1174643488?msource=applemaps",
+      },
+    ],
+    dishes: [
+      {
+        name: "牡丹虾",
+        imageUrl:
+          "https://qcloud.dpfile.com/pc/8Zfd4MkiFdX3QRmCRFHCCh3dOpkC0_hZkw6tSemHLWe6SfmrzwV649OAfQirSVRBl0cm-Lf9tDMlLZpO7rb3bg.jpg",
+        imageSourceUrl:
+          "https://www.dianping.com/shop/1174643488/photos/tag-%E8%8F%9C-%E7%89%A1%E4%B8%B9%E8%99%BE?pg=1",
+        recommendations: 117,
+      },
+    ],
+  },
+  发酵食堂: {
+    checkedAt: "2026-07-20",
+    methodology: verifiedMethodology,
+    metricLabel: "公开推荐 · 图文已核对",
+    sources: [
+      {
+        label: "发酵食堂公开推荐菜",
+        url: "https://m.dianping.com/shop/91992779?msource=applemaps",
+      },
+    ],
+    dishes: [
+      {
+        name: "可露丽礼盒（多口味）",
+        imageUrl:
+          "https://qcloud.dpfile.com/pc/u2bwX-wvTiQTlPwev3e-ebduL0NHVHHs9mvP2MbPStlk2NZGkJzb_6Ltdze-JC9Cl0cm-Lf9tDMlLZpO7rb3bg.jpg",
+        imageSourceUrl:
+          "https://www.dianping.com/shop/91992779/photos/tag-%E8%8F%9C-%E5%8F%AF%E9%9C%B2%E4%B8%BD%E7%A4%BC%E7%9B%92?pg=1",
+      },
+    ],
+  },
+  胖哥俩肉蟹煲: {
+    checkedAt: "2026-07-20",
+    methodology: verifiedMethodology,
+    metricLabel: "公开推荐 · 图文已核对",
+    sources: [
+      {
+        label: "胖哥俩肉蟹煲公开推荐菜",
+        url: "https://m.dianping.com/shop/21190411?msource=applemaps",
+      },
+    ],
+    dishes: [
+      {
+        name: "招牌肉蟹煲",
+        imageUrl:
+          "https://qcloud.dpfile.com/pc/EDWpLRGUmJN4vctgGdi3WEwthTL6a5eNXJjceET1weJadmpZof7PnkUitt3C9MDhl0cm-Lf9tDMlLZpO7rb3bg.jpg",
+        imageSourceUrl:
+          "https://www.dianping.com/shop/21190411/photos/tag-%E8%8F%9C-%E6%8B%9B%E7%89%8C%E8%82%89%E8%9F%B9%E7%85%B2?pg=1",
+        recommendations: 1743,
+      },
+      {
+        name: "鸡爪煲",
+        imageUrl:
+          "https://qcloud.dpfile.com/pc/ikkjo9BoZxyLMFljvpmjJJe2LuSAt3qOmjwj1m2KGNXTF4iJVaTskAeBbIeh9_Yml0cm-Lf9tDMlLZpO7rb3bg.jpg",
+        imageSourceUrl:
+          "https://www.dianping.com/shop/21190411/photos/tag-%E8%8F%9C-%E9%B8%A1%E7%88%AA%E7%85%B2?pg=1",
+        recommendations: 423,
+      },
+    ],
+  },
+  荆九爷: {
+    checkedAt: "2026-07-20",
+    methodology: verifiedMethodology,
+    metricLabel: "公开推荐 · 图文已核对",
+    sources: [
+      {
+        label: "荆九爷爆炒桥头三嫩公开推荐菜",
+        url: "https://m.dianping.com/shop/687405715?msource=applemaps",
+      },
+    ],
+    dishes: [
+      {
+        name: "鸡爪焖黄豆",
+        imageUrl:
+          "https://p0.meituan.net/biztone/3dff6cc7a2710983bc4acdb10f175877909170.jpg",
+        imageSourceUrl:
+          "https://www.dianping.com/shop/687405715/photos/tag-%E8%8F%9C-%E9%B8%A1%E7%88%AA%E7%84%96%E9%BB%84%E8%B1%86?pg=1",
+        recommendations: 40,
+      },
+    ],
+  },
+  小厨师: {
+    checkedAt: "2026-07-20",
+    methodology: verifiedMethodology,
+    metricLabel: "公开推荐 · 图文已核对",
+    sources: [
+      {
+        label: "小厨师·二十年沈家门小海鲜公开推荐菜",
+        url: "https://you.ctrip.com/food/hangzhou14/5147235.html",
+      },
+    ],
+    dishes: [
+      {
+        name: "葱油海瓜子",
+        imageUrl:
+          "https://qcloud.dpfile.com/pc/isSrpgt95CBf9XsbcmTsJrhFIT97NLyz3iH7IK95wMduXX25lWBCG1CsemDzCy1wl0cm-Lf9tDMlLZpO7rb3bg.jpg",
+        imageSourceUrl:
+          "https://www.dianping.com/shop/536949/photos/tag-%E8%8F%9C-%E8%91%B1%E6%B2%B9%E6%B5%B7%E7%93%9C%E5%AD%90?pg=1",
+      },
+      {
+        name: "葱油花蛤",
+        imageUrl:
+          "https://qcloud.dpfile.com/pc/ivBfYEFre-WWga2W47cua5ya1UOiRX1GL2gMMuArEm61AHYHhMy-bxSatolcYUhwl0cm-Lf9tDMlLZpO7rb3bg.jpg",
+        imageSourceUrl:
+          "https://www.dianping.com/shop/536949/photos/tag-%E8%8F%9C-%E8%91%B1%E6%B2%B9%E8%8A%B1%E8%9B%A4?pg=1",
+      },
+    ],
+  },
+  潮中人: {
+    checkedAt: "2026-07-20",
+    methodology: verifiedMethodology,
+    metricLabel: "公开推荐 · 图文已核对",
+    sources: [
+      {
+        label: "潮中人·潮州菜公开推荐菜",
+        url: "https://you.ctrip.com/food/hangzhou14/5144239.html",
+      },
+    ],
+    dishes: [
+      {
+        name: "卤水拼盘",
+        imageUrl:
+          "https://qcloud.dpfile.com/pc/SiwzHVgtTTYmAfqHn09rmEGKZ7WggEi9t0u96f_o9DSHO3zsCaKERD1ezzk3MpY7l0cm-Lf9tDMlLZpO7rb3bg.jpg",
+        imageSourceUrl:
+          "https://www.dianping.com/shop/131974259/photos/tag-%E8%8F%9C-%E5%8D%A4%E6%B0%B4%E6%8B%BC%E7%9B%98?pg=1",
+      },
+    ],
+  },
+  川味泡菜: {
+    checkedAt: "2026-07-20",
+    methodology: verifiedMethodology,
+    metricLabel: "公开推荐 · 图文已核对",
+    sources: [
+      {
+        label: "川味泡菜馆公开推荐菜",
+        url: "https://m.dianping.com/shop/19633076?msource=applemaps",
+      },
+    ],
+    dishes: [
+      {
+        name: "招牌豆花鱼",
+        imageUrl:
+          "https://qcloud.dpfile.com/pc/sEsIt_XKduXu3c2hXF-KipRDzdgaQiUtHMY3PgIIYi_aIdIK86IKRWkxU4rsQLJrl0cm-Lf9tDMlLZpO7rb3bg.jpg",
+        imageSourceUrl:
+          "https://www.dianping.com/shop/19633076/photos/tag-%E8%8F%9C-%E6%8B%9B%E7%89%8C%E8%B1%86%E8%8A%B1%E9%B1%BC?pg=1",
+        recommendations: 27,
+      },
+    ],
+  },
+  跑马场: {
+    checkedAt: "2026-07-20",
+    methodology: verifiedMethodology,
+    metricLabel: "公开推荐 · 图文已核对",
+    sources: [
+      {
+        label: "跑马场三明治公开推荐菜",
+        url: "https://m.dianping.com/shop/1755490994?msource=applemaps",
+      },
+    ],
+    dishes: [
+      {
+        name: "跑马场慢烤牛肉三明治",
+        imageUrl:
+          "https://qcloud.dpfile.com/pc/dLWqCU10CmQkJLot4PFsQLPGAFvO8uKQBb9rl8lUQ7FYZVVfRi2TqgSxN_xBIYijl0cm-Lf9tDMlLZpO7rb3bg.jpg",
+        imageSourceUrl:
+          "https://www.dianping.com/shop/1755490994/photos/tag-%E8%8F%9C-%E8%B7%91%E9%A9%AC%E5%9C%BA%E6%85%A2%E7%83%A4%E7%89%9B%E8%82%89%E4%B8%89%E6%98%8E%E6%B2%BB?pg=1",
+        recommendations: 9,
+      },
+      {
+        name: "辣脆培根和牛堡",
+        imageUrl:
+          "https://qcloud.dpfile.com/pc/IZ0PoWJ-roSOLPy4_J3SywhvVw6IxQgLFeywBSqpRtW5e2PDg2y8rNjEFucJv_e3l0cm-Lf9tDMlLZpO7rb3bg.jpg",
+        imageSourceUrl:
+          "https://www.dianping.com/shop/1755490994/photos/tag-%E8%8F%9C-%E8%BE%A3%E8%84%86%E5%9F%B9%E6%A0%B9%E5%92%8C%E7%89%9B%E5%A0%A1?pg=1",
+        recommendations: 3,
+      },
+    ],
+  },
+  慧娟面馆: {
+    checkedAt: "2026-07-20",
+    methodology: verifiedMethodology,
+    metricLabel: "公开推荐 · 图文已核对",
+    sources: [
+      {
+        label: "慧娟面馆·餐厅公开推荐菜",
+        url: "https://m.dianping.com/shop/112275943?msource=applemaps",
+      },
+    ],
+    dishes: [
+      {
+        name: "秘制碳烤鲈鱼",
+        imageUrl:
+          "https://qcloud.dpfile.com/pc/7lYAYunqY3YHF8x941dGQdEWSJ3VI6cx2wV8Fc4JiLy6SfmrzwV649OAfQirSVRBl0cm-Lf9tDMlLZpO7rb3bg.jpg",
+        imageSourceUrl:
+          "https://www.dianping.com/shop/112275943/photos/tag-%E8%8F%9C-%E7%A7%98%E5%88%B6%E7%A2%B3%E7%83%A4%E9%B2%88%E9%B1%BC?pg=1",
+        recommendations: 105,
+      },
+    ],
+  },
+  奎元馆: {
+    checkedAt: "2026-07-20",
+    methodology: verifiedMethodology,
+    metricLabel: "公开推荐 · 图文已核对",
+    sources: [
+      {
+        label: "奎元馆公开推荐菜",
+        url: "https://m.dianping.com/shop/1901856958?msource=applemaps",
+      },
+    ],
+    dishes: [
+      {
+        name: "酸汤鱼片面",
+        imageUrl:
+          "https://qcloud.dpfile.com/pc/iXSWZqE_gU_LuWMaDaytI_AtwlLiFjN4Kw08ADrWErLcqS48o594hGx6r1CwtmlIl0cm-Lf9tDMlLZpO7rb3bg.jpg",
+        imageSourceUrl:
+          "https://www.dianping.com/shop/1901856958/photos/tag-%E8%8F%9C-%E9%85%B8%E6%B1%A4%E9%B1%BC%E7%89%87%E9%9D%A2?pg=1",
+        recommendations: 22,
+      },
+    ],
+  },
+  肉肉大米: {
+    checkedAt: "2026-07-20",
+    methodology: verifiedMethodology,
+    metricLabel: "公开推荐 · 图文已核对",
+    sources: [
+      {
+        label: "肉肉大米公开推荐菜",
+        url: "https://m.dianping.com/shop/1641615863?msource=applemaps",
+      },
+    ],
+    dishes: [
+      {
+        name: "牛肉温泉蛋拌饭",
+        imageUrl:
+          "https://qcloud.dpfile.com/pc/0u94k1pw5PkO-TM_pQO6G_XeNo2gQ0oicw_HoOhsOmyb6VR7dl2Sf5Jv-Iq-Na96l0cm-Lf9tDMlLZpO7rb3bg.jpg",
+        imageSourceUrl:
+          "https://www.dianping.com/shop/1641615863/photos/tag-%E8%8F%9C-%E7%89%9B%E8%82%89%E6%B8%A9%E6%B3%89%E8%9B%8B%E6%8B%8C%E9%A5%AD?pg=1",
+        recommendations: 53,
+      },
+      {
+        name: "牛肉饼·每日手工现拍",
+        imageUrl:
+          "https://qcloud.dpfile.com/pc/SU-GZYXPxlcAbqS2Z0zF-h4VFqty9ML3pS56eHixY23aIdIK86IKRWkxU4rsQLJrl0cm-Lf9tDMlLZpO7rb3bg.jpg",
+        imageSourceUrl:
+          "https://www.dianping.com/shop/1641615863/photos/tag-%E8%8F%9C-%E7%89%9B%E8%82%89%E9%A5%BC?pg=1",
+      },
+    ],
+  },
+  十八号酒馆: {
+    checkedAt: "2026-07-20",
+    methodology: verifiedMethodology,
+    metricLabel: "公开推荐 · 图文已核对",
+    sources: [
+      {
+        label: "18号酒馆公开推荐菜",
+        url: "https://m.dianping.com/shop/jay9Z4yyKg109JiI",
+      },
+    ],
+    dishes: [
+      {
+        name: "香烤鸡中翅",
+        imageUrl:
+          "https://qcloud.dpfile.com/pc/4y6VvATxOS5VhnKjyzJbv8LN4Sxq2Z-tx6zqv_jX5XC1AHYHhMy-bxSatolcYUhwl0cm-Lf9tDMlLZpO7rb3bg.jpg",
+        imageSourceUrl:
+          "https://www.dianping.com/shop/jay9Z4yyKg109JiI/photos/tag-%E8%8F%9C-%E9%A6%99%E7%83%A4%E9%B8%A1%E4%B8%AD%E7%BF%85?pg=1",
+      },
+    ],
+  },
+});
+
+// Exact per-dish bindings override every legacy gallery-based entry above.
+Object.assign(dishRankings, verifiedDishRankings);
