@@ -2,6 +2,7 @@
 
 import { useMemo, useRef, useState } from "react";
 import type { RefObject } from "react";
+import { dishRankings } from "./dish-rankings";
 import "./wheel.css";
 
 type Restaurant = {
@@ -305,6 +306,9 @@ export default function Home() {
   const amapUrl = selectedRestaurant
     ? `https://uri.amap.com/search?keyword=${encodeURIComponent(`${selectedRestaurant.name} 杭州`)}&city=杭州&callnative=1`
     : "#";
+  const dishRanking = selectedRestaurant
+    ? dishRankings[selectedRestaurant.name]
+    : undefined;
 
   return (
     <main>
@@ -390,19 +394,72 @@ export default function Home() {
           </div>
 
           {stage === "restaurant" && selectedRestaurant && (
-            <section className="dish-board dish-verifying">
-              <p className="eyebrow">DISH RANKING · 真实榜单核实中</p>
-              <h2>{selectedRestaurant.name}｜暂不展示未经核实的菜品</h2>
-              <p>原有推测内容已全部移除。需要确认具体分店后，才能按大众点评、高德扫街榜或小红书的真实热度整理 Top 10 与网友实拍。</p>
-              <div className="verify-actions">
-                <a href={`https://www.xiaohongshu.com/search_result?keyword=${encodeURIComponent(`${selectedRestaurant.name} 杭州 招牌菜`)}`} target="_blank" rel="noreferrer">
-                  去小红书核实
-                </a>
-                <a href={`https://uri.amap.com/search?keyword=${encodeURIComponent(`${selectedRestaurant.name} 杭州`)}&city=杭州&callnative=1`} target="_blank" rel="noreferrer">
-                  去高德查看
-                </a>
-              </div>
-            </section>
+            dishRanking ? (
+              <section className="dish-board">
+                <div className="dish-heading">
+                  <div>
+                    <p className="eyebrow">DISH RANKING · 品牌热门菜</p>
+                    <h2>{selectedRestaurant.name}｜真实推荐菜</h2>
+                  </div>
+                  <span>已核实 {dishRanking.dishes.length} 道</span>
+                </div>
+
+                <div className="dish-grid">
+                  {dishRanking.dishes.map((dish, index) => (
+                    <article className="dish-card" key={dish.name}>
+                      <a
+                        className="dish-photo"
+                        href={dish.imageUrl}
+                        target="_blank"
+                        rel="noreferrer"
+                        aria-label={`查看${selectedRestaurant.name}${dish.name}实拍原图`}
+                      >
+                        <img
+                          src={dish.imageUrl}
+                          alt={`${selectedRestaurant.name} · ${dish.name}实拍`}
+                          loading="lazy"
+                          referrerPolicy="no-referrer"
+                        />
+                        <b>TOP {index + 1}</b>
+                      </a>
+                      <div className="dish-copy">
+                        <h3>{dish.name}</h3>
+                        <p>{dish.recommendations.toLocaleString("zh-CN")} 次公开推荐</p>
+                        <a href={dish.imageUrl} target="_blank" rel="noreferrer">
+                          查看实拍原图 ↗
+                        </a>
+                      </div>
+                    </article>
+                  ))}
+                </div>
+
+                <p className="dish-method">
+                  {dishRanking.methodology} 推荐数来自公开页面，用于判断网友热度，不代表官方销量。核实日期：{dishRanking.checkedAt}。
+                </p>
+                <div className="dish-sources">
+                  <span>核实来源</span>
+                  {dishRanking.sources.map((source) => (
+                    <a href={source.url} target="_blank" rel="noreferrer" key={source.url}>
+                      {source.label} ↗
+                    </a>
+                  ))}
+                </div>
+              </section>
+            ) : (
+              <section className="dish-board dish-verifying">
+                <p className="eyebrow">DISH RANKING · 等待逐类核实</p>
+                <h2>{selectedRestaurant.name}｜品牌菜品尚未整理</h2>
+                <p>这里按品牌汇总，不要求具体分店。只有找到可核实的菜名、热度依据和品牌实拍后才会展示，数量不足 10 道时不会补齐。</p>
+                <div className="verify-actions">
+                  <a href={`https://www.xiaohongshu.com/search_result?keyword=${encodeURIComponent(`${selectedRestaurant.name} 杭州 招牌菜`)}`} target="_blank" rel="noreferrer">
+                    去小红书核实
+                  </a>
+                  <a href={`https://uri.amap.com/search?keyword=${encodeURIComponent(`${selectedRestaurant.name} 杭州`)}&city=杭州&callnative=1`} target="_blank" rel="noreferrer">
+                    去高德查看
+                  </a>
+                </div>
+              </section>
+            )
           )}
         </section>
       ) : (

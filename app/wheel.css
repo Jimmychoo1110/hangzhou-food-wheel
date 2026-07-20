@@ -130,6 +130,36 @@ button:disabled { cursor: not-allowed; opacity: .42; }
 .dish-board li { display: flex; align-items: center; gap: 14px; padding: 13px 3px; border-bottom: 1px dashed #cfc2b5; font-weight: 850; }
 .dish-board li b { color: var(--red); font-size: 11px; letter-spacing: .1em; }
 .dish-board > p { margin: 18px 0 0; color: #81756c; font-size: 11px; line-height: 1.6; }
+.dish-grid {
+  display: grid; grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px; margin-top: 20px;
+}
+.dish-card {
+  min-width: 0; display: grid; grid-template-columns: 148px minmax(0, 1fr);
+  background: #fff; border: 2px solid var(--ink); overflow: hidden;
+}
+.dish-photo {
+  position: relative; min-height: 118px; overflow: hidden;
+  background: #e9ded2; border-right: 2px solid var(--ink);
+}
+.dish-photo img { width: 100%; height: 100%; display: block; object-fit: cover; transition: transform .28s ease; }
+.dish-photo:hover img { transform: scale(1.035); }
+.dish-photo b {
+  position: absolute; left: 8px; top: 8px; z-index: 1;
+  color: #fff; background: var(--red); border: 1.5px solid var(--ink);
+  padding: 5px 7px; font-size: 10px; letter-spacing: .08em;
+}
+.dish-copy { min-width: 0; padding: 16px 14px; display: flex; flex-direction: column; justify-content: center; }
+.dish-copy h3 { margin: 0; color: var(--ink); font-size: 17px; line-height: 1.25; }
+.dish-copy p { margin: 8px 0 0; color: #756a61; font-size: 11px; font-weight: 800; }
+.dish-copy a { margin-top: 14px; color: var(--red); font-size: 11px; font-weight: 950; text-decoration: none; }
+.dish-method { padding-top: 17px; border-top: 1px dashed #cfc2b5; }
+.dish-sources { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-top: 12px; }
+.dish-sources span { color: #81756c; font-size: 10px; font-weight: 950; letter-spacing: .1em; }
+.dish-sources a {
+  color: var(--ink); background: #fff; border: 1px solid var(--ink);
+  padding: 6px 8px; text-decoration: none; font-size: 10px; font-weight: 900;
+}
 .dish-verifying { text-align: center; padding: 38px 28px; }
 .dish-verifying h2 { margin: 0; font-size: clamp(23px, 4vw, 36px); letter-spacing: -.04em; }
 .dish-verifying > p:not(.eyebrow) { max-width: 670px; margin: 16px auto 0; font-size: 13px; }
@@ -182,9 +212,16 @@ footer p { margin: 0; letter-spacing: 0; }
   .control-panel { padding: 20px; }
   .sticker-row { min-height: 90px; margin-bottom: -20px; }
   .dish-board { padding: 20px 16px; margin-top: 30px; }
-  .dish-heading { align-items: start; }
+  .dish-heading { align-items: start; flex-direction: column; }
+  .dish-heading > span { align-self: flex-start; }
   .dish-board ol { grid-template-columns: 1fr; }
   .dish-board li { padding: 11px 2px; }
+  .dish-grid { grid-template-columns: 1fr; gap: 12px; }
+  .dish-card { grid-template-columns: 118px minmax(0, 1fr); }
+  .dish-photo { min-height: 108px; }
+  .dish-copy { padding: 13px 12px; }
+  .dish-copy h3 { font-size: 15px; }
+  .dish-copy a { margin-top: 10px; }
   .verify-actions { flex-direction: column; }
   .final-card { min-height: calc(100vh - 160px); }
   footer { display: block; }
