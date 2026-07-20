@@ -3,6 +3,7 @@ export type DishRankingItem = {
   imageUrl: string;
   recommendations?: number;
   evidence?: string;
+  imageNote?: string;
 };
 
 export type DishRanking = {
@@ -17,6 +18,34 @@ export type DishRanking = {
 };
 
 export const dishRankings: Record<string, DishRanking> = {
+  广西菜: {
+    checkedAt: "2026-07-20",
+    methodology:
+      "按大众点评杭州中心店公开“网友推荐”顺序整理；图片均来自同一门店的用户实拍，用作菜品参考，不把无法核对的一对一图片关系标作精确菜品图。",
+    metricLabel: "大众点评网友推荐",
+    sources: [
+      {
+        label: "嬷冉MARANZ · 广西菜（杭州中心店）",
+        url: "https://m.dianping.com/shopinfo/G5ySgBI0L92Uru35?msource=Appshare2021&utm_source=shop_share&shoptype=10&shopcategoryid=250&cityid=3&isoversea=0",
+      },
+      {
+        label: "大众点评公开网友推荐菜",
+        url: "https://m.dianping.com/shop/1015065729381049?msource=applemaps",
+      },
+    ],
+    dishes: [
+      { name: "酸笋紫苏鸭掌煲", imageUrl: "https://qcloud.dpfile.com/pc/-t7KKjTeiXk89SbwG1-zdfxCUGSJwsDBGSaL6brqquVzl6QxVMk327vmlZRx4QT3l0cm-Lf9tDMlLZpO7rb3bg.jpg", recommendations: 288, imageNote: "同店用户实拍参考" },
+      { name: "柳州爆炒螺蛳粉", imageUrl: "https://qcloud.dpfile.com/pc/U6QZN9BmZ1DfGkDtUplav-u5aIiBS-nLZaKbENgsDOvOtDbjW5XSHpNRsXhYjKwdl0cm-Lf9tDMlLZpO7rb3bg.jpg", recommendations: 250, imageNote: "同店用户实拍参考" },
+      { name: "紫苏叶包脆脆排骨肉", imageUrl: "https://img.meituan.net/ugcpic/3d3511a7ed1008f1370dcdf05a37c9ce1670467.png%40240w_180h_1e_1c_1l%7Cwatermark%3D0", evidence: "大众点评网友推荐", imageNote: "同店用户实拍参考" },
+      { name: "木薯糖水", imageUrl: "https://qcloud.dpfile.com/pc/kFfAwbSTEECo418pxoQPXwpuCFPDHjSCkYZKOXWVbOY9JyASPPsAY4HKActKSJLEl0cm-Lf9tDMlLZpO7rb3bg.jpg", evidence: "大众点评网友推荐", imageNote: "同店用户实拍参考" },
+      { name: "南宁夜市老友粉", imageUrl: "https://qcloud.dpfile.com/pc/-_Q_FLaZDU12UAL2EwUmJzmkOQTdkA9lUL7-WwKwFnzcqS48o594hGx6r1CwtmlIl0cm-Lf9tDMlLZpO7rb3bg.jpg", evidence: "大众点评网友推荐", imageNote: "同店用户实拍参考" },
+      { name: "胸口油爆炒鸭掌筋", imageUrl: "https://qcloud.dpfile.com/pc/qhdejZ7Pq-76-noX7OqEQbWckRSNS3drkud0XcR8uIUrEecrw4wT6Tn7HMFEGiSEl0cm-Lf9tDMlLZpO7rb3bg.jpg", evidence: "大众点评网友推荐", imageNote: "同店用户实拍参考" },
+      { name: "百香果虾球", imageUrl: "https://qcloud.dpfile.com/pc/9PfKI4AuQSYhZj5NiNoH-CxsFeDj97dswaBLBY7GcnzkBGDdxR3tJzwM1hXJQ5hOl0cm-Lf9tDMlLZpO7rb3bg.jpg", evidence: "大众点评网友推荐", imageNote: "同店用户实拍参考" },
+      { name: "家烧荔浦芋头煲", imageUrl: "https://qcloud.dpfile.com/pc/1sNVEiBM9pLM1FvJPAUMH_LYc00ZKSO4fE93uTtwenvbO1X8lUx6XgAW5--i7MUNl0cm-Lf9tDMlLZpO7rb3bg.jpg", evidence: "大众点评网友推荐", imageNote: "同店用户实拍参考" },
+      { name: "百香果生牛", imageUrl: "https://qcloud.dpfile.com/pc/vX2S3qwnPOGNTVOZq8Ln_V5hDOI8qJDpLJ9hPNp1uU0y1WEsxPgkCs9TFktFM1N3l0cm-Lf9tDMlLZpO7rb3bg.jpg", evidence: "大众点评网友推荐", imageNote: "同店用户实拍参考" },
+      { name: "蜜薯粉蒸肉", imageUrl: "https://qcloud.dpfile.com/pc/7brdO6QlMyUhLwVRN5AMHgZ27DwCTlKv4qAQaB3pQFmVLBeDnL56KS5XV3aKu-Wzl0cm-Lf9tDMlLZpO7rb3bg.jpg", evidence: "大众点评网友推荐", imageNote: "同店用户实拍参考" },
+    ],
+  },
   东京烧肉: {
     checkedAt: "2026-07-20",
     methodology:

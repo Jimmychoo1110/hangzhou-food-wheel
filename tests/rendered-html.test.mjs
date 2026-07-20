@@ -62,6 +62,8 @@ test("keeps selection, settlement, and verified dish data on one page", async ()
   assert.match(page, /restaurantBans/);
   assert.match(page, /!categoryBans\.includes\(item\)/);
   assert.match(page, /!restaurantBans\.includes\(item\.name\)/);
+  assert.doesNotMatch(page, /history\.length > 0 \|\| stage === "done"/);
+  assert.doesNotMatch(page, /disabled=\{spinning \|\| history\.length > 0\}/);
   assert.match(page, /没有更多可转选项/);
   assert.doesNotMatch(page, /className={`selection-summary/);
   assert.match(page, /<strong>不满意？<\/strong>/);

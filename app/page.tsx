@@ -277,7 +277,6 @@ export default function Home() {
 
   function spin() {
     if (spinning || history.length >= 3 || stage === "done" || !wheelRef.current) return;
-    setBanMode(false);
     const pool =
       stage === "category"
         ? categories.filter((item) => !categoryHistory.includes(item) && !categoryBans.includes(item))
@@ -347,7 +346,6 @@ export default function Home() {
       setSettledRotation(0);
       setRestaurantHistory([]);
       setRestaurantBans([]);
-      setBanMode(false);
       setSelectedRestaurant(null);
       setStage("restaurant");
     } else {
@@ -371,7 +369,7 @@ export default function Home() {
   }
 
   function toggleBan(item: string) {
-    if (!banMode || spinning || history.length > 0 || stage === "done") return;
+    if (!banMode || spinning || stage === "done") return;
     const update = stage === "category" ? setCategoryBans : setRestaurantBans;
     update((previous) => {
       if (previous.includes(item)) return previous.filter((entry) => entry !== item);
@@ -451,14 +449,12 @@ export default function Home() {
                 type="button"
                 className={`ban-toggle ${banMode ? "active" : ""}`}
                 onClick={() => setBanMode((active) => !active)}
-                disabled={spinning || history.length > 0}
+                disabled={spinning}
                 aria-pressed={banMode}
               >
-                {history.length > 0
-                  ? `黑名单已锁定${currentBans.length ? ` · 已屏蔽 ${currentBans.length} 个` : ""}`
-                  : banMode
-                    ? `直接点转盘选择 · 选好了点这里（${currentBans.length}）`
-                    : "不想吃那些？点击这里拉入黑名单"}
+                {banMode
+                  ? `直接点转盘选择 · 选好了点这里（${currentBans.length}）`
+                  : "不想吃那些？点击这里拉入黑名单"}
               </button>
             )}
 
@@ -498,11 +494,19 @@ export default function Home() {
                       href={dish.imageUrl}
                       target="_blank"
                       rel="noreferrer"
-                      aria-label={`查看${selectedRestaurant.name}${dish.name}实拍原图`}
+                      aria-label={
+                        dish.imageNote
+                          ? `查看${selectedRestaurant.name}门店用户实拍参考`
+                          : `查看${selectedRestaurant.name}${dish.name}实拍原图`
+                      }
                     >
                       <img
                         src={dish.imageUrl}
-                        alt={`${selectedRestaurant.name} · ${dish.name}实拍`}
+                        alt={
+                          dish.imageNote
+                            ? `${selectedRestaurant.name} · ${dish.imageNote}`
+                            : `${selectedRestaurant.name} · ${dish.name}实拍`
+                        }
                         loading="lazy"
                         referrerPolicy="no-referrer"
                       />
@@ -515,6 +519,7 @@ export default function Home() {
                           ? `${dish.recommendations.toLocaleString("zh-CN")} ${dishRanking.metricLabel ?? "次公开推荐"}`
                           : dish.evidence ?? "公开推荐菜"}
                       </p>
+                      {dish.imageNote ? <small>{dish.imageNote}</small> : null}
                       <a href={dish.imageUrl} target="_blank" rel="noreferrer">
                         查看实拍原图 ↗
                       </a>
